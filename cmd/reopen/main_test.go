@@ -42,7 +42,8 @@ type world struct {
 	openErr    error    // what opening the tabs fails with
 	held       []string // the files Codex's daemon holds open
 	noIterm    bool
-	now        time.Time // zero: the clock's
+	installed  map[string]bool // the agent CLIs on PATH
+	now        time.Time       // zero: the clock's
 	stdout     bytes.Buffer
 	stderr     bytes.Buffer
 }
@@ -103,7 +104,13 @@ func (w *world) app(cwd, stdin string) *app {
 		},
 		openFiles:      func(pids []int) ([]string, error) { return w.held, nil },
 		itermInstalled: func() bool { return !w.noIterm },
-		tty:            func() *os.File { return nil },
+		lookPath: func(name string) (string, error) {
+			if w.installed[name] {
+				return "/usr/local/bin/" + name, nil
+			}
+			return "", exec.ErrNotFound
+		},
+		tty: func() *os.File { return nil },
 	}
 }
 

@@ -93,11 +93,14 @@ func (a *app) cmdOpen(args []string) int {
 	if len(offer) == 0 {
 		switch {
 		case len(rows) == 0:
-			fmt.Fprintf(a.stdout, "reopen: no session of %s is on the list yet. A session gets on it when it starts, once its CLI has reopen's hook: reopen hooks claude (or codex, antigravity) prints it.\n", name)
+			fmt.Fprintf(a.stdout, "reopen: no session of %s is on the list yet. A session gets on it when it starts, once its CLI has reopen's hook, which reopen init adds; and a session handoff gives a role, without it.\n", name)
 		case nOpen == len(rows):
 			fmt.Fprintf(a.stdout, "reopen: every session of %s is open (%d). reopen list shows them.\n", name, nOpen)
 		default:
 			fmt.Fprintf(a.stdout, "reopen: no session of %s to bring back: %s. reopen list shows them all.\n", name, a.counts(nOpen, nNever, len(left)))
+		}
+		for _, n := range a.setupNotes() {
+			fmt.Fprintln(a.stdout, n)
 		}
 		return 0
 	}

@@ -133,6 +133,8 @@ func (a *app) hook(args []string) error {
 				l.Entries = slices.Delete(l.Entries, last, last+1)
 			}
 		}
+		// A session forget dropped is the operator's again once it starts.
+		l.Forgotten = slices.DeleteFunc(l.Forgotten, func(f string) bool { return f == id })
 		e := store.Entry{CLI: c.Name, ID: id, Folder: folder, PID: pid, Args: info.Args, LastSeen: now, Role: role}
 		if i := l.Find(c.Name, id); i >= 0 {
 			if e.Role == "" {

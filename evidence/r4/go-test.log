@@ -1,0 +1,134 @@
+# command: gofmt -l . ; go vet ./... ; go test -race -count=1 -v ./... (summarised: each test's result), then go test -count=2 ./... ; at commit d363ed7 on r4-init-handoff, a clean tree
+# date: 2026-11-20 13:30:36 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac; go version go1.25.3 darwin/arm64
+## gofmt -l . (empty means formatted)
+## go vet ./...
+## go test -race -count=1 -v ./...
+exit 0
+--- PASS: TestBinary (5.63s)
+--- PASS: TestHookRecordsClaudeCode (0.07s)
+--- PASS: TestHookSkips (0.11s)
+--- PASS: TestHookRecordsCodexAndAntigravity (0.09s)
+--- PASS: TestHookWorktreeSharesTheList (0.13s)
+--- PASS: TestHookFollowsTheLatestRun (0.09s)
+--- PASS: TestHookClearReplacesTheEntryFromItsProcess (0.11s)
+--- PASS: TestHookKeepsFlagsFromABackgroundWorker (0.10s)
+--- PASS: TestHookNotesTheRole (0.10s)
+--- PASS: TestPrintResumesClosedSessionsNewestFirst (0.16s)
+--- PASS: TestPrintQuotesAFolder (0.15s)
+--- PASS: TestOpenSessionsAreLeftOut (0.20s)
+--- PASS: TestResumeInsideASessionMovesItsProcess (0.31s)
+--- PASS: TestLeftOutAndDropped (0.27s)
+--- PASS: TestRolesAndTheFirstMessage (0.46s)
+--- PASS: TestBackgroundFollowsContinuedIn (0.27s)
+--- PASS: TestStaleContinuedInIsIgnored (0.16s)
+--- PASS: TestRefusedInAnAgentsSession (0.59s)
+--- PASS: TestPickAndOpen (0.54s)
+--- PASS: TestListAndForget (0.32s)
+--- PASS: TestHooksPrintsValidSettings (0.06s)
+--- PASS: TestAnEmptyListMakesNoFolder (0.09s)
+--- PASS: TestOutsideARepository (0.07s)
+--- PASS: TestBypassModeComesBackOnlyWithItsFlag (0.17s)
+--- PASS: TestHandoffSessionsWithoutTheirHook (0.55s)
+--- PASS: TestHandoffSessionsNotOfThisProject (0.11s)
+--- PASS: TestHandoffSessionRunningIsTakenWithItsFlags (0.37s)
+--- PASS: TestHandoffLaterRunReplacesFlags (0.60s)
+--- PASS: TestAnEarlierRunSeenLastDoesntWin (0.47s)
+--- PASS: TestHandoffProcessMustBeTheSessions (0.36s)
+--- PASS: TestForgetAHandoffSession (0.88s)
+--- PASS: TestClaudeAgentsSaysOpen (0.24s)
+--- PASS: TestInitAddsTheHooks (0.07s)
+--- PASS: TestInitAsksFirst (0.06s)
+--- PASS: TestInitLinksAndBrokenFiles (0.07s)
+--- PASS: TestCodexTrust (0.09s)
+--- PASS: TestListSaysWhatIsntSetUp (0.08s)
+--- PASS: TestInitNeedsAHome (0.07s)
+--- PASS: TestInitHookUnderAnotherEvent (0.07s)
+--- PASS: TestHookForms (0.06s)
+--- PASS: TestInitAddsBesideAHookThatOnlyMentionsReopen (0.07s)
+--- PASS: TestHookCodexThroughItsDaemon (0.44s)
+--- PASS: TestHostileFolders (0.30s)
+--- PASS: TestForgetRefusedInAnAgentsSession (0.06s)
+--- PASS: TestListPointsAtTheHookLog (0.15s)
+--- PASS: TestOpeningFailsWithTheCommandsShown (0.44s)
+--- PASS: TestEmptyStates (0.18s)
+--- PASS: TestConcurrentHooks (0.27s)
+--- PASS: TestPickerKeys (0.00s)
+--- PASS: TestRenderFitsTheTerminal (0.16s)
+--- PASS: TestAgentsEnv (0.00s)
+--- PASS: TestKeysSplitAndCoalesced (0.00s)
+--- PASS: TestRenderNarrow (0.17s)
+--- PASS: TestAgyHoldsItsPresenceLock (0.17s)
+--- PASS: TestOpenByWhatAProcessResumes (0.19s)
+--- PASS: TestContinuedInKeepsANewerRunsFlags (0.28s)
+--- PASS: TestAnAgentsSessionChangesNothing (0.44s)
+--- PASS: TestDetailScreenScrolls (0.22s)
+--- PASS: TestWrap (0.00s)
+--- PASS: TestNoHomeFolder (0.09s)
+--- PASS: TestControlBytesAreShownClean (0.26s)
+--- PASS: TestForgetStartsOverAnUnreadableList (0.11s)
+--- PASS: TestForkKeepsBoth (0.48s)
+--- PASS: TestForgetPrintsNoCleanedCommand (0.18s)
+--- PASS: TestOnlyLeavingWorksWhenTooSmall (0.00s)
+--- PASS: TestDetailsShowTheExactCommand (0.21s)
+--- PASS: TestVersion (0.07s)
+ok  	github.com/dre4success/reopen/cmd/reopen	20.598s
+--- PASS: TestInteractive (0.00s)
+--- PASS: TestFlagsKeepOnlyStartFlagsThatMatter (0.00s)
+--- PASS: TestSkipsChecks (0.00s)
+--- PASS: TestResume (0.00s)
+--- PASS: TestTranscriptAndLabel (0.02s)
+--- PASS: TestShorten (0.00s)
+--- PASS: TestContinuedIn (0.00s)
+--- PASS: TestClean (0.00s)
+--- PASS: TestLabelIsCleaned (0.00s)
+--- PASS: TestCodexMetaAndSettings (0.01s)
+--- PASS: TestAntigravityTranscript (0.00s)
+--- PASS: TestResumedID (0.00s)
+--- PASS: TestTitleAndFirst (0.00s)
+--- PASS: TestModeFarBack (0.01s)
+ok  	github.com/dre4success/reopen/internal/agent	1.204s
+?   	github.com/dre4success/reopen/internal/gitx	[no test files]
+--- PASS: TestOpenPassesCommandsAsArguments (0.17s)
+--- PASS: TestOpenSaysWhatMacOSRefused (0.05s)
+ok  	github.com/dre4success/reopen/internal/iterm	1.362s
+--- PASS: TestGetReadsExactArguments (0.03s)
+--- PASS: TestGetGone (0.00s)
+--- PASS: TestGetZombie (0.20s)
+--- PASS: TestScanFindsAnID (0.11s)
+--- PASS: TestNamed (0.00s)
+ok  	github.com/dre4success/reopen/internal/proc	1.487s
+--- PASS: TestRead (0.01s)
+--- PASS: TestSessions (0.01s)
+ok  	github.com/dre4success/reopen/internal/roles	1.147s
+--- PASS: TestAppend (0.00s)
+--- PASS: TestAppendKeepsEverythingElse (0.00s)
+--- PASS: TestAppendRefuses (0.00s)
+--- PASS: TestAppendAntigravity (0.00s)
+ok  	github.com/dre4success/reopen/internal/settings	1.145s
+--- PASS: TestQuote (0.00s)
+--- PASS: TestJoinRoundTrip (0.03s)
+ok  	github.com/dre4success/reopen/internal/shell	1.169s
+--- PASS: TestUpdateWritesPrivately (0.01s)
+--- PASS: TestUpdateUnchangedWritesNothing (0.00s)
+--- PASS: TestLoadRefusesAnotherFormat (0.00s)
+--- PASS: TestUpdateConcurrent (0.41s)
+--- PASS: TestNoHomeNoWrite (0.00s)
+--- PASS: TestResetAnUnreadableList (0.01s)
+ok  	github.com/dre4success/reopen/internal/store	1.649s
+?   	github.com/dre4success/reopen/internal/term	[no test files]
+## counts: 102 pass, 0 fail, 0 skip
+## go test -count=2 ./...
+ok  	github.com/dre4success/reopen/cmd/reopen	40.823s
+ok  	github.com/dre4success/reopen/internal/agent	0.229s
+?   	github.com/dre4success/reopen/internal/gitx	[no test files]
+ok  	github.com/dre4success/reopen/internal/iterm	0.530s
+ok  	github.com/dre4success/reopen/internal/proc	0.757s
+ok  	github.com/dre4success/reopen/internal/roles	0.137s
+ok  	github.com/dre4success/reopen/internal/settings	0.111s
+ok  	github.com/dre4success/reopen/internal/shell	0.138s
+ok  	github.com/dre4success/reopen/internal/store	1.027s
+?   	github.com/dre4success/reopen/internal/term	[no test files]
+exit 0
+## TestAnEarlierRunSeenLastDoesntWin against round 3's condition (PID or arguments differ), restored after: it fails, as reviewer #148 found
+--- FAIL: TestAnEarlierRunSeenLastDoesntWin: the earlier run's flags came back: Args [agy --dangerously-skip-permissions]

@@ -1,0 +1,38 @@
+# command: read-only checks of what R4 rests on, against this Mac's own records: handoff's session files in this repository, the CLIs' records of those sessions, claude agents --json, Codex's config.toml; then the R4 build's reopen list and reopen init in this agent's session
+# date: 2026-11-20 13:05:58 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac (go1.25.3), on r4-init-handoff
+# Counts, field names and states only: no session id, label or path.
+## handoff's session files: 4
+  reviewer: fields ['host', 'role', 'session', 'since', 'v']; host names a live codex process; found in the records of: ['codex']
+  reviewer-3: fields ['host', 'role', 'session', 'since', 'v']; host names a live agy process; found in the records of: ['antigravity']
+  implementer: fields ['pid', 'role', 'session', 'since', 'v']; pid names a live claude process; found in the records of: ['claude']
+  reviewer-2: fields ['pid', 'role', 'session', 'since', 'v']; pid names a live claude process; found in the records of: ['claude']
+## Claude Code: of the 2 transcripts, the first cwd is this repository's folder in 2
+   transcripts whose lines note more than one cwd (a cd in a command): 1
+## Codex: the rollout's lines with a cwd, by kind, and whether it is this repository's folder: {'session_meta': [True], 'turn_context': [True], 'thread_settings_applied': [True]}
+## Antigravity's conversation index: outer keys 1 ; conversations 27
+   the session's entry: summary fields ['AgentName', 'AppDataDir', 'Cloud', 'CloudProject', 'GroupID', 'ID', 'Internal', 'Loaded', 'NumSteps', 'PermissionPreset', 'Preview', 'ProjectID', 'Title', 'UpdatedAt', 'WorkspaceURIs']
+   its first WorkspaceURIs entry is this repository's folder as a file URL: True ; PermissionPreset 0 for a conversation whose agy process runs with --dangerously-skip-permissions, so it doesn't tell that flag
+## claude agents --json (with CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1): 8 entries; 6 interactive, with fields ['cwd', 'kind', 'name', 'pid', 'sessionId', 'startedAt', 'status']
+   the two Claude Code sessions handoff names are listed as interactive: 2 of 2
+## Codex: hooks.json's SessionStart groups: 2 ; reopen's is group [1]
+   config.toml has [hooks.state."~/.codex/hooks.json:session_start:0:0"] : True
+   config.toml has [hooks.state."~/.codex/hooks.json:session_start:1:0"] : False
+   the two lists under ~/.reopen/ hold Codex sessions: 0
+## after reviewer #138, 2026-11-20 13:19:11 UTC, at 89068fc
+   the Claude Code sessions handoff names whose claude agents pid is handoff's pid: 2 of 2
+## the R4 build: reopen list in this repository, in this agent's session (it writes nothing)
+exit 0
+   reopen: Codex has no record of trusting reopen's hook, so it doesn't run it yet: the next time Codex starts, it asks. Trust it.
+   reopen · reopen · 4 sessions, newest first
+   implementer: claude, open; shows --dangerously-skip-permissions: True
+   reviewer: codex, loaded; shows --dangerously-skip-permissions: False
+   reviewer-2: claude, open; shows --dangerously-skip-permissions: True
+   reviewer-3: agy, open; shows --dangerously-skip-permissions: True
+   rows noting 'found through handoff': 0
+   reviewer-2's and reviewer-3's flags come from their processes: Claude Code's list names reviewer-2's, and reviewer-3's agy holds its presence lock.
+   entries in this repository's list before and after: 1, 1
+## the R4 build: reopen init in this agent's session
+reopen: init is refused in an agent's session (CLAUDE_CODE_SESSION_ID is set): it changes the CLIs' settings, which only the operator does, at a terminal of their own. reopen hooks <cli> prints a hook to add by hand.
+exit 1
+   backups beside the CLIs' settings afterwards: 0

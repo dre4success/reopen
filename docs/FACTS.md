@@ -179,3 +179,35 @@ Verified while building reopen, on 2026-11-19, with Claude Code 2.1.329, Codex 0
 - The hook recorded it, and `reopen list` showed it open while it ran.
 - Once it ended, `reopen --print` printed `cd -- <folder> && claude --resume <id> --allow-dangerously-skip-permissions`. That line resumed the session, which showed open again, then closed again once it ended.
 
+
+## Checked for R4
+
+On 2026-11-20, read-only, against the operator's own records of this repository's handoff team (`evidence/r4/this-mac.log`, counts and field names only).
+
+**handoff's session files**, `.handoff/sessions/<id>.json`:
+- They hold `v`, `role`, `session` and `since` (RFC 3339, with fractions), with `pid` for a Claude Code session or `host` for a Codex or Antigravity one.
+- Each named a live process of its session's CLI: `claude` for `pid`, `codex` and `agy` for `host`.
+- Each id was in exactly one CLI's records, 4 of 4, so a session's CLI is found by its id.
+
+**Where each CLI's records give a session's folder:**
+- **Claude Code:** transcript lines carry `cwd`. It follows a `cd` in a command: one of the two transcripts noted more than one. The first is where the session began, this repository's folder in 2 of 2.
+- **Codex:** `session_meta`, `turn_context` and `thread_settings_applied` lines all carry `cwd`, this repository's folder in each.
+- **Antigravity:** `cache/conversation_metadata.json` holds, under one outer key, each conversation by its id. Each has a `summary` with `ID`, `Title`, `UpdatedAt`, `PermissionPreset`, `WorkspaceURIs` and more.
+  - The first of `WorkspaceURIs` was this repository's folder as a `file://` URL.
+  - `PermissionPreset` was `0` for a conversation whose `agy` runs with `--dangerously-skip-permissions`, so it doesn't tell that flag.
+
+**`claude agents --json`** lists Claude Code's sessions in terminals as `"kind":"interactive"`, with `pid`, `cwd`, `sessionId`, `startedAt`, `name` and `status`, beside the background ones. Both Claude Code sessions handoff named were listed.
+
+**Codex's trust in a hook:**
+- `config.toml` has a `[hooks.state."<hooks.json>:session_start:<group>:<hook>"]` section with a `trusted_hash` for each hook the operator trusted.
+- Here `~/.codex/hooks.json` has two SessionStart groups, handoff's then reopen's. The section for group 0 is there, and for group 1, reopen's, it isn't. Neither list under `~/.reopen/` has a Codex session, which fits: Codex hasn't run reopen's hook.
+
+**`reopen init`** (`evidence/r4/init-demo.log`) ran in a scratch home through a pseudo-terminal:
+- It added the hook after an existing one of handoff's in Claude Code's settings, adding lines and changing none.
+- It kept the file's mode, 0644, and its copy beside it was byte for byte the file before.
+- It made Codex's and Antigravity's files, 0600.
+- Run again, it found all three set up and asked nothing.
+
+**After reviewer's #138:**
+- For both Claude Code sessions handoff names, `claude agents --json` gives the same process as handoff's `pid`. So Claude Code's own list says which process runs a session.
+- `evidence/r1/e2e-claude.log` (try 2) has bypassPermissions mode reached with `--permission-mode bypassPermissions`, without the skip flag. A plain resume of it ran in auto mode. So a transcript's mode doesn't say which flag a session started with.

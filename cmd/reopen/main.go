@@ -3,9 +3,11 @@
 // in its own folder, in a tab of one new iTerm2 window. The operator
 // decides: it starts sessions only for the operator at a terminal.
 //
-// It makes no model call and has no network code. It writes only its own
-// list, under ~/.reopen/. It reads .handoff/ and the CLIs' transcripts and
-// never writes them, and asks git only read-only questions.
+// It makes no model call and has no network code. It writes its own list,
+// under ~/.reopen/, and, only when the operator runs reopen init and says
+// yes, its start hook into the CLIs' settings. It reads .handoff/ and the
+// CLIs' transcripts and never writes them, and asks git only read-only
+// questions.
 package main
 
 import (
@@ -37,6 +39,7 @@ type app struct {
 	openFiles      func([]int) ([]string, error) // the files the processes hold open, by lsof
 	openTabs       func([]string) error          // a new iTerm2 window, a tab per command
 	itermInstalled func() bool
+	lookPath       func(string) (string, error) // a command on PATH
 	// tty is the terminal to pick in key by key, or nil to ask line by
 	// line; color says whether stdout takes colour.
 	tty   func() *os.File
@@ -46,6 +49,7 @@ type app struct {
 }
 
 const usage = `usage: reopen [--print] [--no-message]
+       reopen init
        reopen list
        reopen forget [<id>]
        reopen hooks claude|codex|antigravity
@@ -55,14 +59,17 @@ const usage = `usage: reopen [--print] [--no-message]
 reopen          lists this project's sessions that aren't open, newest first,
                 and opens the ones you pick (all, by default) in one new
                 iTerm2 window, a tab each. It is refused in an agent's session.
+                The sessions handoff gives roles are on it even without the hook.
   --print       prints each tab's command instead, and starts nothing.
   --no-message  sends no first message to a Codex or Antigravity session
                 with a handoff role. By default one is sent, since those
                 listen for their work only after a turn.
+reopen init     adds reopen's start hook to each agent CLI's settings, after
+                asking: once, for every project.
 reopen list     shows every session on this project's list, open or not.
 reopen forget   drops one entry, or every entry of this project. Never a
                 transcript.
-reopen hooks    prints the start hook to add to a CLI's settings.
+reopen hooks    prints the start hook to add to a CLI's settings by hand.
 reopen version  prints the version this reopen was built as.
 `
 
@@ -80,6 +87,8 @@ func (a *app) run(args []string) int {
 	switch args[0] {
 	case "hook":
 		return a.cmdHook(args[1:])
+	case "init":
+		return a.cmdInit(args[1:])
 	case "hooks":
 		err = a.cmdHooks(args[1:])
 	case "list":

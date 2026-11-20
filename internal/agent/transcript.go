@@ -471,6 +471,9 @@ type CodexSettings struct {
 	Approval string   // on-request, never, …
 	Sandbox  string   // read-only, workspace-write, danger-full-access
 	Roots    []string // folders added to the session's own, writable
+	// Folder is the session's own folder, as the latest settings name it:
+	// a resume from another folder moves it.
+	Folder string
 }
 
 // Settings reads a Codex rollout's latest settings. Codex notes them in two
@@ -504,6 +507,7 @@ func Settings(path string) CodexSettings {
 					Type     string `json:"type"`
 					Model    string `json:"model"`
 					Approval string `json:"approval_policy"`
+					Cwd      string `json:"cwd"`
 					Sandbox  struct {
 						Type string `json:"type"`
 					} `json:"sandbox_policy"`
@@ -521,11 +525,11 @@ func Settings(path string) CodexSettings {
 			}
 			switch {
 			case e.Type == "turn_context" && !out.Known:
-				out = CodexSettings{Known: true, Model: Clean(e.Payload.Model), Approval: Clean(e.Payload.Approval), Sandbox: Clean(e.Payload.Sandbox.Type), Roots: out.Roots}
+				out = CodexSettings{Known: true, Model: Clean(e.Payload.Model), Approval: Clean(e.Payload.Approval), Sandbox: Clean(e.Payload.Sandbox.Type), Roots: out.Roots, Folder: e.Payload.Cwd}
 			case e.Type == "event_msg" && e.Payload.Type == "thread_settings_applied" && e.Payload.Thread != nil:
 				t := e.Payload.Thread
 				if !out.Known {
-					out = CodexSettings{Known: true, Model: Clean(t.Model), Approval: Clean(t.Approval), Sandbox: profileSandbox(t.Profile)}
+					out = CodexSettings{Known: true, Model: Clean(t.Model), Approval: Clean(t.Approval), Sandbox: profileSandbox(t.Profile), Folder: t.Cwd}
 				}
 				if !haveRoots {
 					haveRoots = true

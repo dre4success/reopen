@@ -1,7 +1,6 @@
-// Package roles reads the roles handoff gives sessions, from its session
-// files, .handoff/sessions/<session id>.json. It only reads, and only for
-// roles. The format is handoff's own and can change, so a file whose "v"
-// isn't 1 gives no role.
+// Package roles reads the sessions handoff gives roles, from its session
+// files, .handoff/sessions/<session id>.json. It only reads. The format is
+// handoff's own and can change, so a file whose "v" isn't 1 gives nothing.
 package roles
 
 import (
@@ -9,18 +8,35 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type file struct {
 	V       int    `json:"v"`
 	Role    string `json:"role"`
 	Session string `json:"session"`
+	// Since, pid and host are read apart, so a file whose since or process
+	// reopen can't read still gives its role.
+	Since json.RawMessage `json:"since"`
+	PID   json.RawMessage `json:"pid"`
+	Host  json.RawMessage `json:"host"`
 }
 
-// Read returns the role of each session handoff has one for in the project
-// whose main worktree is root, by session id. A missing folder gives none.
-func Read(root string) map[string]string {
-	out := map[string]string{}
+// Session is a session handoff gives a role.
+type Session struct {
+	ID   string
+	Role string
+	// Since is when handoff saw the session take the role, in its process.
+	Since time.Time
+	// PID is that process, as handoff noted it: Claude Code's own (pid), or
+	// for Codex and Antigravity their hook's parent (host). 0 if neither.
+	PID int
+}
+
+// Sessions are the sessions handoff gives roles in the project whose main
+// worktree is root. A missing folder gives none.
+func Sessions(root string) []Session {
+	var out []Session
 	if root == "" {
 		return out
 	}
@@ -42,7 +58,25 @@ func Read(root string) map[string]string {
 		if json.Unmarshal(data, &f) != nil || f.V != 1 || f.Session != id || !plain(f.Role) {
 			continue
 		}
-		out[id] = f.Role
+		s := Session{ID: id, Role: f.Role}
+		json.Unmarshal(f.Since, &s.Since)
+		if json.Unmarshal(f.PID, &s.PID) != nil || s.PID <= 0 {
+			s.PID = 0
+			if json.Unmarshal(f.Host, &s.PID) != nil || s.PID <= 0 {
+				s.PID = 0
+			}
+		}
+		out = append(out, s)
+	}
+	return out
+}
+
+// Read returns the role of each session handoff has one for in the project
+// whose main worktree is root, by session id.
+func Read(root string) map[string]string {
+	out := map[string]string{}
+	for _, s := range Sessions(root) {
+		out[s.ID] = s.Role
 	}
 	return out
 }

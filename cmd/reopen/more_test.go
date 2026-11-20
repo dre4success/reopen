@@ -189,7 +189,7 @@ func TestOpeningFailsWithTheCommandsShown(t *testing.T) {
 func TestEmptyStates(t *testing.T) {
 	w := newWorld(t)
 	w.run(w.root, "")
-	if !strings.Contains(w.stdout.String(), "no session of proj is on the list yet") || !strings.Contains(w.stdout.String(), "reopen hooks claude") {
+	if !strings.Contains(w.stdout.String(), "no session of proj is on the list yet") || !strings.Contains(w.stdout.String(), "reopen init adds") {
 		t.Fatalf("%q", w.stdout.String())
 	}
 	w.claudeHook(idA, "startup", w.root, w.standIn("claude"))

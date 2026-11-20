@@ -1,6 +1,6 @@
 # reopen
 
-`reopen` brings back a project's agent sessions in one step. It is a small local CLI for macOS. Each Claude Code, Codex and Antigravity session started in a git repository is recorded by its CLI's start hook. Later, `reopen` resumes the closed ones in one new iTerm2 window, a tab each, every session in its own folder. The operator picks which.
+`reopen` brings back a project's agent sessions in one step. It is a small local CLI for macOS. Each Claude Code, Codex and Antigravity session started in a git repository is recorded by its CLI's start hook, and a session handoff gives a role is found from handoff's own records. Later, `reopen` resumes the closed ones in one new iTerm2 window, a tab each, every session in its own folder. The operator picks which.
 
 The spec is [docs/DESIGN.md](docs/DESIGN.md). What it rests on, verified on the operator's Mac, is [docs/FACTS.md](docs/FACTS.md).
 
@@ -10,19 +10,22 @@ It needs macOS and Go 1.25.3 or later to build, and nothing outside Go's standar
 
 ```sh
 go install github.com/dre4success/reopen/cmd/reopen@latest
+reopen init
 ```
 
-That puts `reopen` in `~/go/bin` (or `$GOBIN`). From a clone, `go install ./cmd/reopen` does the same. `reopen version` says which version you have.
+That's all the setup, once, for every project. From then on, `reopen` in a project's folder is the only command.
 
-Then add its start hook to each CLI. `reopen hooks <cli>` prints the hook and the file it goes in. It prints only; it never edits a CLI's settings.
+- `go install` puts `reopen` in `~/go/bin` (or `$GOBIN`). From a clone, `go install ./cmd/reopen` does the same. `reopen version` says which version you have.
+- `reopen init` finds the agent CLIs you have and says, for each, whether its settings have reopen's start hook. It asks once, then adds the hook where it's missing:
+  - Claude Code: `~/.claude/settings.json`;
+  - Codex: `~/.codex/hooks.json`. Codex runs a new hook only once you trust it: it asks the next time it starts;
+  - Antigravity: `~/.gemini/config/hooks.json`.
 
-```sh
-reopen hooks claude            # ~/.claude/settings.json
-reopen hooks codex             # ~/.codex/hooks.json; Codex asks you to trust it once
-reopen hooks antigravity       # ~/.gemini/config/hooks.json
-```
+  Each file it changes is copied beside itself first (`<file>.reopen-backup-<time>`). The hook goes in at one spot, and every other byte stays as it was, other tools' hooks among them. Run it again any time: it says what's set up.
 
-A session gets on the list when it starts (Codex and Antigravity: at its first turn), from then on.
+A session gets on the list when it starts (Codex and Antigravity: at its first turn), from then on. A session handoff gives a role gets on it without its hook, so a team started before the setup comes back too.
+
+To add a hook by hand instead, `reopen hooks <cli>` prints it and the file it goes in.
 
 ## Use
 
@@ -30,6 +33,7 @@ In any folder of the project:
 
 ```sh
 reopen                 # pick the closed sessions to bring back; Enter opens them
+reopen init            # set up the start hooks, once (above)
 reopen --print         # each tab's command instead; starts nothing
 reopen list            # every session on the list, open or not
 reopen forget [<id>]   # drop one entry (an id or its first 4+ characters), or all, printing each one's command
@@ -88,9 +92,17 @@ A Claude Code session nobody typed to is left out quietly, since it can't be res
 - A Claude Code session listens at once, and is sent nothing.
 - A first prompt is never passed back.
 
+**With handoff.** Every session handoff gives a role in the project is on the list, whether or not its hook ever ran. reopen finds it by its id in its CLI's own records, which give its folder (it must be in this project), and drops it after 30 days unused, as any other.
+- While it runs, reopen takes its exact flags from its process, as the hook would have: the process Claude Code lists for it, or for Antigravity the one holding its lock. So run `reopen` once while your team is open, and each comes back as it was.
+- If reopen never saw it run, no flag is made up, and it comes back with what its CLI keeps:
+  - Codex: everything, since its resume keeps its settings;
+  - Claude Code: its model and permission mode, but not bypass mode or folders it added. The row says so;
+  - Antigravity: agy's defaults, and the row says so.
+- `forget` drops one, and reopen doesn't find it through handoff again until it starts.
+
 **When it is open.** A session counts as open in any of these cases:
 - a live process runs it;
-- Claude Code runs it in the background;
+- Claude Code lists it as running, in a terminal or in the background;
 - for Codex, its daemon still has it loaded. That lasts some minutes after its terminal closes, so such a session is left out until then;
 - for Antigravity, a live `agy` holds its presence lock, as with `agy --continue`.
 
@@ -99,10 +111,11 @@ A Claude Code session nobody typed to is left out quietly, since it can't be res
 ## Boundaries
 
 - No model call and no network.
-- It writes only its own list: one file per repository under `~/.reopen/` (mode 0600, in a folder of mode 0700), and the hook's log beside it.
-- It reads `.handoff/sessions/` (only for roles) and the CLIs' transcripts, and never writes them. Git is read-only.
+- It writes its own list: one file per repository under `~/.reopen/` (mode 0600, in a folder of mode 0700), and the hook's log beside it.
+- It writes a CLI's settings only when you run `reopen init` at a terminal and say yes, each file copied beside itself first. It is refused in an agent's session.
+- It reads `.handoff/sessions/` (for roles and the sessions they name) and the CLIs' transcripts and records, and never writes them. Git is read-only.
 - It runs `ps`, `/usr/sbin/lsof`, `osascript` and `git`. To find background sessions it runs `claude agents --json`, with `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, without which that command opens a connection off the Mac.
-- Opening sessions, and `forget`, are refused in an agent's session: when `CLAUDE_CODE_SESSION_ID`, `CODEX_THREAD_ID` or `ANTIGRAVITY_CONVERSATION_ID` is set. Opening also needs a terminal on stdin. `--print`, `list` and `hooks` work anywhere and change nothing: only `reopen` itself, and `forget`, change the list.
+- Opening sessions, `forget` and `init` are refused in an agent's session: when `CLAUDE_CODE_SESSION_ID`, `CODEX_THREAD_ID` or `ANTIGRAVITY_CONVERSATION_ID` is set. Opening and `init` also need a terminal on stdin. `--print`, `list` and `hooks` work anywhere and change nothing: only `reopen` itself, and `forget`, change the list.
 - **The known gap:** it is handoff's. A CLI that sets none of those variables but gives its commands a terminal, such as Gemini CLI, passes.
 
 ## A cost to know
@@ -115,7 +128,7 @@ A long session resumed after days re-reads its context at full price on its firs
 go test ./...
 ```
 
-The tests never open a terminal window, start an agent CLI or touch the real `~/.reopen/`. Each runs with:
+The tests never open a terminal window, start an agent CLI, or touch the real `~/.reopen/` or a CLI's real settings. Each runs with:
 - a temporary home and a scratch git repository;
 - stand-in processes: the test binary, started again under the names `claude`, `codex` and `agy`;
 - a stand-in `osascript`.

@@ -11,8 +11,8 @@
 ## Boundaries that never move
 
 - No model call and no network.
-- It writes only its own list under `~/.reopen/`, with mode 0600.
-- It reads `.handoff/` and the CLIs' transcripts and never writes them.
+- It writes only its own list under `~/.reopen/`, with mode 0600; and, when the operator runs `reopen init` at a terminal and says yes, its start hook into the agent CLIs' settings, each file copied beside itself first.
+- It reads `.handoff/` and the CLIs' transcripts and records and never writes them.
 - It starts agent CLIs only from `reopen` itself, for the operator at a terminal. It is refused in an agent's session. `--print` and `list` start nothing.
 - It passes back a session's flags, never its first prompt.
 - Git is read-only.
@@ -20,7 +20,7 @@
 ## Conventions
 
 - Go, with no third-party dependencies. Of the Mac's own tools, it may run `ps`, `/usr/sbin/lsof`, `osascript` and `git`.
-- Tests never open a terminal window, start an agent CLI or touch the real `~/.reopen/`. Use `--print`, a temporary HOME and stand-in CLIs.
+- Tests never open a terminal window, start an agent CLI, or touch the real `~/.reopen/` or a CLI's real settings. Use `--print`, a temporary HOME and stand-in CLIs.
 - A check passes only with Run evidence under `evidence/`: the command, the date and who ran it.
 - In repository files, write "the operator" and `~`, never a name or a home path.
 - Conventional Commit subjects (`feat:`, `fix:`, `docs:`, `test:`), one concern per commit.

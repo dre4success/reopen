@@ -40,6 +40,14 @@ type Entry struct {
 	// Role is the handoff role reopen last saw the session hold, kept so it
 	// can say so once handoff has moved the role or dropped its file.
 	Role string `json:"role,omitempty"`
+	// Found says how reopen listed a session its hook never reported:
+	// "handoff", from handoff's record of the role it holds. Its hook's
+	// report, when it comes, replaces the entry and this with it.
+	Found string `json:"found,omitempty"`
+	// Started is when the process PID started, for an entry found through
+	// handoff whose arguments reopen took from its process. A run that
+	// started later is the newer, however reopen's own runs interleave.
+	Started time.Time `json:"started,omitzero"`
 }
 
 // List is a project's list.
@@ -47,6 +55,10 @@ type List struct {
 	V       int     `json:"v"`
 	Repo    string  `json:"repo"` // the common git folder's full path
 	Entries []Entry `json:"entries"`
+	// Forgotten are the ids of sessions handoff gives roles that the
+	// operator dropped with forget: reopen doesn't find them through handoff
+	// again. A session's hook, when it next starts, takes it off.
+	Forgotten []string `json:"forgotten,omitempty"`
 }
 
 // Find returns the index of the entry for cli's session id, or -1.

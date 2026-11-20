@@ -1,0 +1,88 @@
+# command: python3 -I evidence/r4/init-demo.py <tmp>/bin/reopen <tmp>/home <tmp>/bin:/usr/bin:/bin <answer>: reopen init in a pseudo-terminal, built from r4-init-handoff at 89068fc, the answer typed once the question shows; with only HOME, PATH, TERM and NO_COLOR set. First answered with Ctrl-D, then with Enter, then run again. claude, codex and agy on that PATH are stand-ins that only fail if run; init only looks them up. Claude Code's settings start with a start hook of handoff's; Codex's and Antigravity's files don't exist yet. Trailing spaces are trimmed: the question ends with one.
+# date: 2026-11-20 13:18:57 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac (go1.25.3)
+## reopen init, answered with Ctrl-D
+reopen init · reopen's start hook in each CLI's settings, so its sessions get on their project's list as they start
+
+  + Claude Code  to add · ~/.claude/settings.json
+  + Codex        to add · ~/.codex/hooks.json
+  + Antigravity  to add · ~/.gemini/config/hooks.json
+
+Add it to 3 files? Each is copied beside itself first. [Y/n] ^D
+reopen: nothing changed.
+(exit 0)
+## after Ctrl-D: Claude Code's settings unchanged: yes; hooks.json files made: 0; backups: 0
+## reopen init, answered with Enter
+reopen init · reopen's start hook in each CLI's settings, so its sessions get on their project's list as they start
+
+  + Claude Code  to add · ~/.claude/settings.json
+  + Codex        to add · ~/.codex/hooks.json
+  + Antigravity  to add · ~/.gemini/config/hooks.json
+
+Add it to 3 files? Each is copied beside itself first. [Y/n]
+  ✓ Claude Code  added · the file as it was is ~/.claude/settings.json.reopen-backup-20261120-131858
+  ✓ Codex        added · ~/.codex/hooks.json is new
+  ✓ Antigravity  added · ~/.gemini/config/hooks.json is new
+
+Codex runs reopen's hook only once you trust it, and its config.toml has no record of that yet: the next time Codex starts, it asks. Trust it.
+From now on each new session gets on its project's list as it starts (Codex and Antigravity: at its first message). In a project's folder, reopen brings them back; a session handoff gives a role is found even without its hook.
+(exit 0)
+## reopen init, again
+reopen init · reopen's start hook in each CLI's settings, so its sessions get on their project's list as they start
+
+  ✓ Claude Code  set up already · ~/.claude/settings.json
+  ✓ Codex        set up already · ~/.codex/hooks.json
+  ✓ Antigravity  set up already · ~/.gemini/config/hooks.json
+
+Codex runs reopen's hook only once you trust it, and its config.toml has no record of that yet: the next time Codex starts, it asks. Trust it.
+From now on each new session gets on its project's list as it starts (Codex and Antigravity: at its first message). In a project's folder, reopen brings them back; a session handoff gives a role is found even without its hook.
+(exit 0)
+## ~/.claude/settings.json: diff from before (only lines added)
+11a12,24
+>       },
+>       {
+>         "hooks": [
+>           {
+>             "type": "command",
+>             "command": "reopen",
+>             "args": [
+>               "hook",
+>               "claude"
+>             ],
+>             "timeout": 10
+>           }
+>         ]
+## modes
+-rw-r--r-- <tmp>/home/.claude/settings.json
+-rw-r--r-- <tmp>/home/.claude/settings.json.reopen-backup-20261120-131858
+-rw------- <tmp>/home/.codex/hooks.json
+-rw------- <tmp>/home/.gemini/config/hooks.json
+## the backup equals the file before: yes
+## ~/.codex/hooks.json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "exec reopen hook codex",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+## ~/.gemini/config/hooks.json
+{
+  "reopen": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "exec reopen hook antigravity",
+        "timeout": 10
+      }
+    ]
+  }
+}

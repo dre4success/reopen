@@ -59,6 +59,9 @@ type row struct {
 	// the tab's shell would take as typed: a newline ends the line.
 	unsafe bool
 	size   int64 // the transcript's size, what a resume re-reads
+	// unrecorded: found through handoff, with no start arguments of its own,
+	// so it comes back with only what its CLI's records keep.
+	unrecorded bool
 }
 
 // pickable says whether the row is offered to open: closed and resumable,
@@ -124,21 +127,33 @@ func project(repo string) string {
 
 // view returns repo's rows, newest first, and the entries unused for 30
 // days. With write, which only reopen at the operator's terminal asks, it
-// brings the list up to date under its lock: it follows Claude Code's
+// brings the list up to date under its lock: it adds the sessions handoff
+// gives roles that its hook never reported, follows Claude Code's
 // /background, notes the roles it sees, and drops what has gone unused.
 // Without, it shows the same and changes nothing.
 func (a *app) view(repo string, write bool) ([]row, []row, error) {
 	var rows, dropped []row
-	// The processes and Claude Code's background jobs are asked for before
-	// the list's lock is taken, so a hook never waits on them.
+	// handoff's sessions, the processes and Claude Code's own list are asked
+	// for before the list's lock is taken, so a hook never waits on them.
 	a.root = gitx.MainRoot(repo)
 	pre, err := store.Load(a.home, repo)
-	if err != nil || len(pre.Entries) == 0 {
-		return nil, nil, err // an empty list needs no lock, nor ~/.reopen/ made for it
+	if err != nil {
+		return nil, nil, err
+	}
+	found := a.handoffSessions(repo, pre)
+	if len(pre.Entries) == 0 && len(found) == 0 && (!write || len(pre.Forgotten) == 0) {
+		return nil, nil, nil // an empty list needs no lock, nor ~/.reopen/ made for it
+	}
+	known := &store.List{Entries: slices.Clone(pre.Entries)}
+	for _, f := range found {
+		known.Entries = append(known.Entries, f.entry)
 	}
 	lines, _ := a.scan() // with no process list, only the recorded processes are checked
-	jobs := a.backgroundJobs(pre)
-	loaded, presence := a.held(pre, lines)
+	jobs, live := a.claudeSessions(known)
+	loaded, presence := a.held(known, lines)
+	for i := range found {
+		found[i].seen = a.adopt(&found[i], live)
+	}
 	update := store.Update
 	a.wrote = write
 	if !write {
@@ -154,7 +169,30 @@ func (a *app) view(repo string, write bool) ([]row, []row, error) {
 		}
 	}
 	err = update(a.home, repo, func(l *store.List) (bool, error) {
-		changed := followContinued(l, a.homes())
+		changed := false
+		for _, f := range found {
+			switch i := l.Find(f.entry.CLI, f.entry.ID); {
+			case slices.Contains(l.Forgotten, f.entry.ID):
+			case i < 0:
+				l.Entries = append(l.Entries, f.entry)
+				changed = true
+			case f.seen && l.Entries[i].Found != "" && f.entry.Started.After(l.Entries[i].Started):
+				// Its process, seen running it now: a later run's, whose flags
+				// may differ, since agy runs no hook on a resume. Later by when
+				// the process started, not by when a reopen saw it: one that
+				// saw an earlier run may take the lock last. Not once its own
+				// hook has reported it, which made the entry its own.
+				l.Entries[i] = f.entry
+				changed = true
+			}
+		}
+		// What forget dropped stays dropped while handoff names it; then it
+		// needn't be kept.
+		named := roles.Read(gitx.MainRoot(repo))
+		if kept := slices.DeleteFunc(slices.Clone(l.Forgotten), func(id string) bool { return named[id] == "" }); len(kept) != len(l.Forgotten) {
+			l.Forgotten, changed = kept, true
+		}
+		changed = followContinued(l, a.homes()) || changed
 		now := a.now()
 		held := roles.Read(gitx.MainRoot(repo))
 		run := a.running(l, lines)
@@ -184,7 +222,8 @@ func (a *app) view(repo string, write bool) ([]row, []row, error) {
 			switch job, bg := jobs[e.ID]; {
 			case bg && c.Name == agent.Claude:
 				r.state, r.job = background, job
-			case run[key{e.CLI, e.ID}], c.Name == agent.Antigravity && presence[e.ID]:
+			case run[key{e.CLI, e.ID}], c.Name == agent.Antigravity && presence[e.ID],
+				c.Name == agent.Claude && live[e.ID] > 0:
 				r.state = open
 			case c.Name == agent.Codex && loaded[e.ID]:
 				r.state, r.held = open, true
@@ -199,6 +238,11 @@ func (a *app) view(repo string, write bool) ([]row, []row, error) {
 				continue
 			}
 			r.flags = c.Flags(e.Args, e.Folder)
+			// Its start arguments weren't recorded: no flag is made up for
+			// it. Bypass mode, say, is reached with --permission-mode too, which
+			// a resume doesn't keep (evidence/r1/e2e-claude.log), so a row in it
+			// comes back without, and says so, as any row without the flag.
+			r.unrecorded = e.Found != "" && len(e.Args) == 0
 			if c.Name == agent.Claude && r.mode == "bypassPermissions" && !slices.ContainsFunc(agent.Words(r.flags), func(w string) bool {
 				return w == "--dangerously-skip-permissions" || w == "--allow-dangerously-skip-permissions"
 			}) {
@@ -333,32 +377,123 @@ func (a *app) held(l *store.List, lines []proc.Line) (codex, agy map[string]bool
 	return
 }
 
-// backgroundJobs maps the id of each Claude Code session running in the
-// background to its job's id, from claude agents --json. It asks only when
-// the list has a Claude Code session.
-func (a *app) backgroundJobs(l *store.List) map[string]string {
-	jobs := map[string]string{}
+// claudeSessions asks claude agents --json which Claude Code sessions run
+// now: jobs maps the id of each in the background to its job's id, and live
+// the id of each in a terminal (interactive) to its process. It asks only
+// when the list has a Claude Code session.
+func (a *app) claudeSessions(l *store.List) (jobs map[string]string, live map[string]int) {
+	jobs, live = map[string]string{}, map[string]int{}
 	if !slices.ContainsFunc(l.Entries, func(e store.Entry) bool { return e.CLI == agent.Claude }) {
-		return jobs
+		return
 	}
 	out, err := a.claudeAgents()
 	if err != nil {
-		return jobs
+		return
 	}
 	var list []struct {
 		ID        string `json:"id"`
 		SessionID string `json:"sessionId"`
 		Kind      string `json:"kind"`
+		PID       int    `json:"pid"`
 	}
 	if json.Unmarshal(out, &list) != nil {
-		return jobs
+		return
 	}
 	for _, j := range list {
-		if j.Kind == "background" && agent.PlainID(j.ID) && j.SessionID != "" {
+		switch {
+		case j.SessionID == "":
+		case j.Kind == "background" && agent.PlainID(j.ID):
 			jobs[j.SessionID] = j.ID
+		case j.Kind == "interactive":
+			live[j.SessionID] = max(j.PID, 1) // open, whether or not its process is known
 		}
 	}
-	return jobs
+	return
+}
+
+// foundSession is a session handoff gives a role that its hook never
+// reported, as reopen found it.
+type foundSession struct {
+	entry  store.Entry
+	handed roles.Session // handoff's record of it
+	onList bool          // on the list already, as found through handoff
+	seen   bool          // its process was seen running it, and taken
+}
+
+// handoffSessions are the sessions handoff gives roles in the project that
+// the list lacks, or has only as found through handoff, as entries: each
+// found by its id in its CLI's records, in a folder of this project, and
+// used in the last 30 days. One forget dropped isn't found again.
+func (a *app) handoffSessions(repo string, l *store.List) []foundSession {
+	var out []foundSession
+	h := a.homes()
+	for _, s := range roles.Sessions(gitx.MainRoot(repo)) {
+		if !agent.PlainID(s.ID) || slices.Contains(l.Forgotten, s.ID) {
+			continue
+		}
+		f := foundSession{entry: store.Entry{ID: s.ID, Role: s.Role, LastSeen: s.Since, Found: "handoff"}, handed: s}
+		if i := slices.IndexFunc(l.Entries, func(e store.Entry) bool { return e.ID == s.ID }); i >= 0 {
+			if l.Entries[i].Found == "" {
+				continue // its hook reported it
+			}
+			f.entry, f.onList = l.Entries[i], true
+			out = append(out, f)
+			continue
+		}
+		c, t := agent.Find(h, s.ID)
+		if c == nil || a.now().Sub(agent.LastUse(t)) > unusedFor {
+			continue
+		}
+		f.entry.CLI, f.entry.Folder = c.Name, c.Folder(h, s.ID, t)
+		if f.entry.Folder == "" {
+			continue
+		}
+		if common, err := gitx.CommonDir(f.entry.Folder); err != nil || common != repo {
+			continue // not this project's, or its folder is gone
+		}
+		out = append(out, f)
+	}
+	return out
+}
+
+// adopt takes the arguments of the process that runs a found session now,
+// as its hook would have, when something says that process runs that
+// session: for Claude Code, its own list of the sessions in terminals; for
+// Antigravity, the session's presence lock, held by the process handoff
+// noted. A process's start time and name can't tell which session it runs.
+// Arguments that resume another session aren't taken. Codex's never are:
+// none of its flags come back, and its hooks' parent is mostly its daemon.
+func (a *app) adopt(f *foundSession, live map[string]int) bool {
+	c, ok := agent.Lookup(f.entry.CLI)
+	if !ok {
+		return false
+	}
+	id, pid := f.entry.ID, 0
+	switch c.Name {
+	case agent.Claude:
+		pid = live[id]
+	case agent.Antigravity:
+		if f.handed.PID > 0 {
+			files, err := a.openFiles([]int{f.handed.PID})
+			if err == nil && slices.ContainsFunc(files, func(p string) bool {
+				return filepath.Base(p) == id+".lock" && filepath.Base(filepath.Dir(p)) == "presence"
+			}) {
+				pid = f.handed.PID
+			}
+		}
+	}
+	if pid <= 1 {
+		return false
+	}
+	info, ok := a.process(pid)
+	if !ok || !proc.Named(info.Args, c.Command) || !c.Interactive(info.Args) {
+		return false
+	}
+	if r := c.ResumedID(info.Args); r != "" && r != id {
+		return false
+	}
+	f.entry.PID, f.entry.Args, f.entry.LastSeen, f.entry.Started = pid, info.Args, a.now(), info.Start
+	return true
 }
 
 // followContinued follows Claude Code's /background on the list. It ends a

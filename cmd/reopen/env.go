@@ -48,6 +48,7 @@ func newApp() *app {
 			return cmd.Output() // stdin is /dev/null
 		},
 		openFiles: proc.OpenFiles,
+		lookPath:  exec.LookPath,
 		itermInstalled: func() bool {
 			for _, d := range []string{"/Applications", filepath.Join(home, "Applications")} {
 				if _, err := os.Stat(filepath.Join(d, "iTerm.app")); err == nil {

@@ -200,6 +200,14 @@ func (a *app) note(r row, s style, noMessage bool) []string {
 	case r.Role != "" && r.role == "":
 		notes = append(notes, s.dim("handoff no longer lists its role "+agent.Clean(r.Role)+"; give it again if it should have it"))
 	}
+	if r.unrecorded && r.state != background && !r.unsafe && !r.gone {
+		switch r.cli.Name {
+		case agent.Antigravity:
+			notes = append(notes, s.dim("found through handoff: its start flags weren't recorded, so it comes back with agy's defaults"))
+		case agent.Claude:
+			notes = append(notes, s.dim("found through handoff: its start flags weren't recorded, so a flag that skips checks, or a folder it added, doesn't come back"))
+		}
+	}
 	if r.modeLost != "" && r.state != background {
 		notes = append(notes, s.dim("it was in "+r.modeLost+" mode, which a resume doesn't keep without the flag that allows it"))
 	}

@@ -1,0 +1,72 @@
+# command: the v0.1.0 release: a fresh commit of local main's tree, made in a separate clone, checked at its tag in a plain clone, pushed on the operator's word, then go install through the module proxy and the release page
+# date: 2026-11-20 11:45:42 UTC to 11:48:00 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac (go1.25.3)
+# The public commit is made in a scratch folder from git archive main, so no local commit or its author goes out. Its author, committer and tagger are the noreply identity, passed by env only.
+## local main published: e81150e3a1c496b501457142dfcc106171d09064, tree d3bf0668a8440e065a90ebfea568f95c5d4289bb
+## the public commit: 13ccbc10ffd51f2636e682bc20c5aa68b6a7ca46, tree d3bf0668a8440e065a90ebfea568f95c5d4289bb, 1 commit, no parent
+## git write-tree in the scratch folder equals local main's tree: yes
+## the annotated tag v0.1.0: a1058e81ab6fe5155a20a9efa086849de3c55d8c, on 13ccbc10ffd51f2636e682bc20c5aa68b6a7ca46
+## author, committer and tagger are the noreply identity: 2 of 2, tagger 1 of 1
+## refs in the scratch folder before the push, the only ones pushed: refs/heads/main refs/tags/v0.1.0
+## checks in git clone --no-local of the scratch folder, at v0.1.0
+## go.mod require lines: 0
+## go vet ./...: clean
+## gofmt -l .: []
+## go test -race -count=1 ./..., with HANDOFF_TEST_NOTIFY set to a scratch file
+ok  	github.com/dre4success/reopen/cmd/reopen	12.114s
+ok  	github.com/dre4success/reopen/internal/agent	1.163s
+?   	github.com/dre4success/reopen/internal/gitx	[no test files]
+ok  	github.com/dre4success/reopen/internal/iterm	1.309s
+ok  	github.com/dre4success/reopen/internal/proc	1.396s
+ok  	github.com/dre4success/reopen/internal/roles	1.119s
+ok  	github.com/dre4success/reopen/internal/shell	1.134s
+ok  	github.com/dre4success/reopen/internal/store	1.525s
+?   	github.com/dre4success/reopen/internal/term	[no test files]
+## go test exit: 0
+## alerts sent: 0 (the scratch file was never made)
+## go build ./cmd/reopen at the tag, then reopen version: v0.1.0
+## the sweep: python3 -I .git/info/sweep.py trees . 42a61ff main <scratch>/matches.tsv (the script and its patterns are local only; the matching lines stay outside the repository)
+## 42a61ff: 6 files
+the operator's name, as a word, in a file name or inside an identifier: 0 lines, 0 file names
+the operator's account name, other than in the module path: 0 lines, 0 file names
+a path under a home folder: 0 lines, 0 file names
+the names of the operator's other projects: 0 lines, 0 file names
+an email address or mail domain: 0 lines, 0 file names
+the operator's server: 0 lines, 0 file names
+## main: 72 files
+the operator's name, as a word, in a file name or inside an identifier: 0 lines, 0 file names
+the operator's account name, other than in the module path: 0 lines, 0 file names
+a path under a home folder: 0 lines, 0 file names
+the names of the operator's other projects: 0 lines, 0 file names
+an email address or mail domain: 2 lines, 0 file names
+the operator's server: 0 lines, 0 file names
+## added lines in git diff 42a61ff main that match:
+the operator's name, as a word, in a file name or inside an identifier: 0 added lines
+the operator's account name, other than in the module path: 0 added lines
+a path under a home folder: 0 added lines
+the names of the operator's other projects: 0 added lines
+an email address or mail domain: 2 added lines
+the operator's server: 0 added lines
+## the hits, by pattern and file (counts only)
+   1 an email address or mail domain	cmd/reopen/main_test.go
+   1 an email address or mail domain	evidence/r1/ui-demo-setup.py
+## reading: the same two as R2's sweep (evidence/r2/sweep.log): one made-up address under the reserved .invalid domain, which the tests and the UI demo's setup give git in scratch repositories. Nothing else matched.
+## the release notes, swept the same way (dir mode): 0 for every pattern
+## gh repo create, public, on the operator's word: https://github.com/dre4success/reopen
+## git push origin main v0.1.0, at 11:46:48 UTC: * [new branch] main -> main, * [new tag] v0.1.0 -> v0.1.0
+## git ls-remote origin after the push
+13ccbc10ffd51f2636e682bc20c5aa68b6a7ca46	HEAD
+13ccbc10ffd51f2636e682bc20c5aa68b6a7ca46	refs/heads/main
+a1058e81ab6fe5155a20a9efa086849de3c55d8c	refs/tags/v0.1.0
+13ccbc10ffd51f2636e682bc20c5aa68b6a7ca46	refs/tags/v0.1.0^{}
+## 2026-11-20 11:46:58 UTC: go install github.com/dre4success/reopen/cmd/reopen@v0.1.0 and @latest, each with a scratch GOBIN and GOMODCACHE
+@v0.1.0: v0.1.0
+@latest: v0.1.0
+## proxy.golang.org list: v0.1.0 
+## gh release create v0.1.0 --title v0.1.0 --notes-file <scratch>/notes.md --verify-tag, at 11:48:00 UTC: https://github.com/dre4success/reopen/releases/tag/v0.1.0, not a draft, not a prerelease
+## the installed ~/go/bin/reopen was unchanged at first: swapping it waited for the operator
+## 2026-11-20 12:06:46 UTC, on the operator's word: go install github.com/dre4success/reopen/cmd/reopen@latest, the real GOBIN (~/go/bin)
+which -a reopen: ~/go/bin/reopen, the only one
+reopen version: v0.1.0
+go version -m: mod github.com/dre4success/reopen v0.1.0, built with go1.25.3
+reopen list, in the repository: exit 0, it read the project's list; reopen hooks claude printed the hook. The CLIs' hooks, a bare reopen, are unchanged.

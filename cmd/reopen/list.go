@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/dre4success/reopen/internal/agent"
+	"github.com/dre4success/reopen/internal/gitx"
+	"github.com/dre4success/reopen/internal/roles"
 	"github.com/dre4success/reopen/internal/store"
 	"github.com/dre4success/reopen/internal/term"
 )
@@ -28,9 +30,12 @@ func (a *app) cmdList(args []string) error {
 	}
 	a.sayDropped(a.stdout, dropped)
 	a.sayHookLog()
+	for _, n := range a.setupNotes() {
+		fmt.Fprintln(a.stdout, n)
+	}
 	if len(rows) == 0 {
 		if len(dropped) == 0 {
-			fmt.Fprintf(a.stdout, "reopen: no session of %s is on the list. A session gets on it when it starts, once its CLI has reopen's hook (reopen hooks).\n", project(repo))
+			fmt.Fprintf(a.stdout, "reopen: no session of %s is on the list. A session gets on it when it starts, once its CLI has reopen's hook (reopen init adds it), and a session handoff gives a role, without it.\n", project(repo))
 		}
 		return nil
 	}
@@ -80,7 +85,9 @@ func stateText(r row) string {
 // cmdForget drops the entry of one session, by its id or the start of it,
 // or with no id every entry of this project, and prints each one's command,
 // so nothing is lost. A transcript is never touched. With no id it also
-// starts over a list that can't be read.
+// starts over a list that can't be read. It reaches every row reopen shows,
+// a session found through handoff and not on the list yet among them; one
+// handoff names is noted as forgotten, so reopen doesn't find it again.
 func (a *app) cmdForget(args []string) error {
 	if len(args) > 1 {
 		return fmt.Errorf("forget takes one id at most\n\n%s", usage)
@@ -93,47 +100,70 @@ func (a *app) cmdForget(args []string) error {
 	if err != nil {
 		return err
 	}
-	if len(args) == 0 {
-		l, err := store.Load(a.home, repo)
-		if err != nil {
-			if err := store.Reset(a.home, repo); err != nil {
-				return err
-			}
-			fmt.Fprintf(a.stdout, "reopen: %s couldn't be read, so the list of %s starts over, empty.\n", a.tilde(store.Path(a.home, repo)), project(repo))
-			return nil
+	a.root = gitx.MainRoot(repo)
+	pre, err := store.Load(a.home, repo)
+	if err != nil {
+		if len(args) > 0 {
+			return err
 		}
-		if len(l.Entries) == 0 {
-			fmt.Fprintf(a.stdout, "reopen: the list of %s is empty already.\n", project(repo))
-			return nil
+		if err := store.Reset(a.home, repo); err != nil {
+			return err
+		}
+		fmt.Fprintf(a.stdout, "reopen: %s couldn't be read, so the list of %s starts over, empty.\n", a.tilde(store.Path(a.home, repo)), project(repo))
+		return nil
+	}
+	var found []store.Entry
+	for _, f := range a.handoffSessions(repo, pre) {
+		if !f.onList {
+			found = append(found, f.entry)
 		}
 	}
+	if len(args) == 0 && len(pre.Entries) == 0 && len(found) == 0 {
+		fmt.Fprintf(a.stdout, "reopen: the list of %s is empty already.\n", project(repo))
+		return nil
+	}
+	named := roles.Read(gitx.MainRoot(repo))
 	var gone []store.Entry
 	err = store.Update(a.home, repo, func(l *store.List) (bool, error) {
+		rows := slices.Clone(l.Entries)
+		for _, e := range found {
+			if l.Find(e.CLI, e.ID) < 0 && !slices.Contains(l.Forgotten, e.ID) {
+				rows = append(rows, e)
+			}
+		}
 		if len(args) == 0 {
-			gone, l.Entries = l.Entries, nil
-			return len(gone) > 0, nil
-		}
-		id := args[0]
-		var match []int
-		for i, e := range l.Entries {
-			if e.ID == id {
-				match = []int{i}
-				break
+			gone, l.Entries = rows, nil
+		} else {
+			id := args[0]
+			var match []int
+			for i, e := range rows {
+				if e.ID == id {
+					match = []int{i}
+					break
+				}
+				if len(id) >= 4 && strings.HasPrefix(e.ID, id) {
+					match = append(match, i)
+				}
 			}
-			if len(id) >= 4 && strings.HasPrefix(e.ID, id) {
-				match = append(match, i)
+			switch len(match) {
+			case 0:
+				return false, fmt.Errorf("no session %s on the list of %s", id, project(repo))
+			case 1:
+			default:
+				return false, fmt.Errorf("%d sessions start with %s; give more of the id", len(match), id)
+			}
+			e := rows[match[0]]
+			gone = append(gone, e)
+			if i := l.Find(e.CLI, e.ID); i >= 0 {
+				l.Entries = slices.Delete(l.Entries, i, i+1)
 			}
 		}
-		switch len(match) {
-		case 0:
-			return false, fmt.Errorf("no session %s on the list of %s", id, project(repo))
-		case 1:
-		default:
-			return false, fmt.Errorf("%d sessions start with %s; give more of the id", len(match), id)
+		for _, e := range gone {
+			if named[e.ID] != "" && !slices.Contains(l.Forgotten, e.ID) {
+				l.Forgotten = append(l.Forgotten, e.ID)
+			}
 		}
-		gone = append(gone, l.Entries[match[0]])
-		l.Entries = slices.Delete(l.Entries, match[0], match[0]+1)
-		return true, nil
+		return len(gone) > 0, nil
 	})
 	if err != nil {
 		return err
@@ -152,6 +182,9 @@ func (a *app) cmdForget(args []string) error {
 			continue
 		}
 		fmt.Fprintf(a.stdout, "  %s\n", a.command(r, true))
+	}
+	if slices.ContainsFunc(gone, func(e store.Entry) bool { return named[e.ID] != "" }) {
+		fmt.Fprintln(a.stdout, "reopen: handoff gives a role to some of them; reopen won't find those through handoff again, only once they start.")
 	}
 	return nil
 }
