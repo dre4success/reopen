@@ -1,0 +1,24 @@
+# command: python3 ui-narrow-drive.py <demo> <demo>/work/reopen 40 12 RESIZE:40:9 '' ' ' RESIZE:40:12 q: the built reopen (this branch's working tree) in a pseudo-terminal of 40 by 12, shrunk to 40 by 9 (TIOCSWINSZ, then SIGWINCH), Enter and space pressed, grown back, then q; the sample sessions of ui-demo-setup.py and a stand-in osascript
+# date: 2026-11-20 00:14:37 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac
+# For reviewer #43, point 2: below the picker's floor, only leaving works. A step's '(terminal 40x12)' is the size the run started at.
+== start: widest line 39 columns (terminal 40)
+== after resizing to 40x9: last frame 1 lines; still running: True
+reopen: too small: enlarge, or q quits
+== after '\\r': widest line 38 columns, last frame 1 lines (terminal 40x12); still running: True
+reopen: too small: enlarge, or q quits
+== after ' ': widest line 38 columns, last frame 1 lines (terminal 40x12); still running: True
+reopen: too small: enlarge, or q quits
+== after resizing to 40x12: last frame 9 lines; still running: True
+reopen · reopen · 5 sessions to bring …
+
+› ○ claude  (reviewer-2)   40 min ago …
+    reopen/cmd · in the background · c…
+    handoff no longer lists its role r…
+    ↓ 4 more
+
+⚠ skips permission checks: 1 of the ti…
+↑↓ · space · a · n · i · enter opens 3…
+== after 'q': widest line 23 columns, last frame 1 lines (terminal 40x12); still running: False
+reopen: nothing opened.
+## the stand-in osascript ran: no

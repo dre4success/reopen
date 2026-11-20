@@ -1,0 +1,30 @@
+# command: python3 -I .git/info/sweep.py trees . 42a61ff r2-publish-ready <scratch>/matches.tsv (the script and its patterns are local only, in .git/info; the matching lines stay outside the repository)
+# date: 2026-11-20 10:04:23 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac; at f72a623
+# This sweeps files and file names. Commit headers aren't swept, as no commit of this repository is pushed (LOG row 65): the release's own fresh commit is checked for its author, committer and tagger before its push.
+## the script's counts, as it printed them
+## 42a61ff: 6 files
+the operator's name, as a word, in a file name or inside an identifier: 0 lines, 0 file names
+the operator's account name, other than in the module path: 0 lines, 0 file names
+a path under a home folder: 0 lines, 0 file names
+the names of the operator's other projects: 0 lines, 0 file names
+an email address or mail domain: 0 lines, 0 file names
+the operator's server: 0 lines, 0 file names
+## r2-publish-ready: 71 files
+the operator's name, as a word, in a file name or inside an identifier: 0 lines, 0 file names
+the operator's account name, other than in the module path: 0 lines, 0 file names
+a path under a home folder: 0 lines, 0 file names
+the names of the operator's other projects: 0 lines, 0 file names
+an email address or mail domain: 2 lines, 0 file names
+the operator's server: 0 lines, 0 file names
+## added lines in git diff 42a61ff r2-publish-ready that match:
+the operator's name, as a word, in a file name or inside an identifier: 0 added lines
+the operator's account name, other than in the module path: 0 added lines
+a path under a home folder: 0 added lines
+the names of the operator's other projects: 0 added lines
+an email address or mail domain: 2 added lines
+the operator's server: 0 added lines
+## the hits, by pattern and file (counts only)
+   1 an email address or mail domain	cmd/reopen/main_test.go
+   1 an email address or mail domain	evidence/r1/ui-demo-setup.py
+## reading: both hits are one made-up address under the reserved .invalid domain, which the tests (cmd/reopen/main_test.go) and the UI demo's setup (evidence/r1/ui-demo-setup.py) give git to commit in scratch repositories. No other pattern matched anything, in a file or a file name.

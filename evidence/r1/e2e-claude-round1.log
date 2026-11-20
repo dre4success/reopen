@@ -1,0 +1,68 @@
+# command: python3 e2e-claude.py (beside this log), run under env -i with HOME, USER and a short PATH; reopen built from this branch's working tree at 23:00 UTC
+# date: 2026-11-19 23:00:28 to 23:02:59 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac
+# reopen's home was a scratch folder (HOME=<scratch>/rhome for the hook and for reopen; CLAUDE_CONFIG_DIR=~/.claude for reopen, so it reads Claude Code's own transcripts). The real ~/.reopen/ was never touched.
+# Step 4 runs the line reopen --print printed, plus --settings with reopen's hook, which the operator would have in their user settings instead.
+## try 1 (failed, kept): the driver gave reopen the scratch HOME without CLAUDE_CONFIG_DIR, so reopen looked for the transcript in the scratch home and found none; and Esc and Ctrl-C didn't end the session in 8 s, so reopen rightly still showed it open, printed nothing, and the driver ran an empty command
+23:00:28 ## 1. a new session: claude --session-id 5b3330c8 --model haiku --allow-dangerously-skip-permissions, with reopen's hook
+23:00:29    (the folder's trust question: answered Yes, with Down and Enter)
+23:00:40    reply written: True
+23:00:40    list file proj-e742816e189e.json mode 600
+23:00:40    entries: [{"cli": "claude", "id": "5b3330c8-935e-48d3-8770-46a8c84a7782", "folder": "<scratch>/proj", "pid": 5180, "args": ["claude", "--session-id", "5b3330c8-935e-48d3-8770-46a8c84a7782", "--model", "haiku", "--allow-dangerously-skip-permissions", "--settings", "{\"hooks\": {\"SessionStart\": [{\"hooks\": [{\"type\": \"command\", \"command\": \"/usr/bin/env\", \"args\": [\"HOME=<scra
+23:00:40 ## 2. while it runs
+23:00:40 $ reopen --print  -> exit 0
+23:00:40 $ reopen list  -> exit 0
+23:00:40    out: reopen: 1 session of proj, newest first:
+23:00:40    out: 
+23:00:40    out:   open        claude  -               just now   (no label)
+23:00:40    out:               <scratch>/proj · 5b3330c8 · comes back with --allow-dangerously-skip-permissions
+23:00:54 ## 3. closed (process alive)
+23:00:54 $ reopen --print  -> exit 0
+23:00:55 $ reopen list  -> exit 0
+23:00:55    out: reopen: 1 session of proj, newest first:
+23:00:55    out: 
+23:00:55    out:   open        claude  -               just now   (no label)
+23:00:55    out:               <scratch>/proj · 5b3330c8 · comes back with --allow-dangerously-skip-permissions
+23:00:55 ## 4. the printed command, run as typed in a tab: /bin/zsh -c <line>
+23:01:23    screen: zsh:1: command not found: --settings
+23:01:23    list file proj-e742816e189e.json mode 600
+23:01:23    entries: [{"cli": "claude", "id": "5b3330c8-935e-48d3-8770-46a8c84a7782", "pid": 5180, "args": ["claude", "--session-id", "5b3330c8-935e-48d3-8770-46a8c84a7782", "--model", "haiku", "--allow-dangerously-skip-permissions", "--settings", "{\"hooks\": {\"SessionStart\": [{\"hooks\": [{\"type\": \"command\", \"command\": \"/usr/bin/env\", \"args\": [\"HOME=<scratch>/rhome\", \"<scratch>/re
+23:01:23 $ reopen --print  -> exit 0
+Traceback (most recent call last):
+  File "<scratch>/e2e.py", line 165, in <module>
+    t2.type("Reply with the one word beta.")
+  File "<scratch>/e2e.py", line 76, in type
+    self.send(ch)
+  File "<scratch>/e2e.py", line 72, in send
+    os.write(self.fd, s.encode())
+OSError: [Errno 5] Input/output error
+## try 2
+23:01:49 ## 1. a new session: claude --session-id da879a3c --model haiku --allow-dangerously-skip-permissions, with reopen's hook
+23:02:19    reply written: True
+23:02:19    list file proj-e742816e189e.json mode 600
+23:02:19    entries: [{"cli": "claude", "id": "da879a3c-5409-406d-b603-80e96b3ca038", "folder": "<scratch>/proj", "pid": 6604, "args": ["claude", "--session-id", "da879a3c-5409-406d-b603-80e96b3ca038", "--model", "haiku", "--allow-dangerously-skip-permissions", "--settings", "{\"hooks\": {\"SessionStart\": [{\"hooks\": [{\"type\": \"command\", \"command\": \"/usr/bin/env\", \"args\": [\"HOME=<scra
+23:02:19 ## 2. while it runs
+23:02:20 $ reopen --print  -> exit 0
+23:02:20 $ reopen list  -> exit 0
+23:02:20    out: reopen: 1 session of proj, newest first:
+23:02:20    out: 
+23:02:20    out:   open        claude  -               just now   Reply with the one word alpha.
+23:02:20    out:               <scratch>/proj · da879a3c · comes back with auto mode and --allow-dangerously-skip-permissions
+23:02:22 ## 3. closed (process ended)
+23:02:22 $ reopen --print  -> exit 0
+23:02:22    out: cd -- <scratch>/proj && claude --resume da879a3c-5409-406d-b603-80e96b3ca038 --allow-dangerously-skip-permissions
+23:02:22 $ reopen list  -> exit 0
+23:02:22    out: reopen: 1 session of proj, newest first:
+23:02:22    out: 
+23:02:22    out:   closed      claude  -               just now   Reply with the one word alpha.
+23:02:22    out:               <scratch>/proj · da879a3c · comes back with auto mode and --allow-dangerously-skip-permissions
+23:02:22 ## 4. the printed command, run as typed in a tab: /bin/zsh -c <line>
+23:02:55    screen: ◐ medium · /effort / ──────────────────────────────────────────────────────────────────────────────── / ❯ / ──────────────────────────────────────────────────────────────────────────────── / ⏵⏵ auto mode on / (shift+tab to cycle) · ← 2 agents[>0q
+23:02:55    list file proj-e742816e189e.json mode 600
+23:02:55    entries: [{"cli": "claude", "id": "da879a3c-5409-406d-b603-80e96b3ca038", "pid": 7267, "args": ["claude", "--resume", "da879a3c-5409-406d-b603-80e96b3ca038", "--allow-dangerously-skip-permissions", "--settings", "{\"hooks\": {\"SessionStart\": [{\"hooks\": [{\"type\": \"command\", \"command\": \"/usr/bin/env\", \"args\": [\"HOME=<scratch>/rhome\", \"<scratch>/reopen\", \"hook\", \"clau
+23:02:55 $ reopen --print  -> exit 0
+23:02:57    reply written after the resume: True
+23:02:59 ## 5. closed again
+23:02:59 $ reopen --print  -> exit 0
+23:02:59    out: cd -- <scratch>/proj && claude --resume da879a3c-5409-406d-b603-80e96b3ca038 --allow-dangerously-skip-permissions
+23:02:59 ## done: session da879a3c-5409-406d-b603-80e96b3ca038

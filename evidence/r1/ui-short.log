@@ -1,0 +1,173 @@
+# command: python3 ui-narrow-drive.py <demo> <demo>/work/reopen 40 12 i j (x12) '' q: the built reopen (this branch's working tree) in a pseudo-terminal of 40 columns by 12 lines, the sample sessions of ui-demo-setup.py, a stand-in osascript
+# date: 2026-11-19 23:49:11 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac
+# For reviewer #23, point 2: the row in full, on a short terminal, scrolls. Each step shows the widest line drawn, and the last frame (what follows the last erase), with escape sequences removed.
+# A first run of this showed the details still on screen after Esc: a lone Esc is taken after 50 ms with no more bytes, and that path didn't redraw. Fixed (draw() after it); this is the run after the fix.
+== start: widest line 0 columns (terminal 40)
+== after 'i': widest line 40 columns, last frame 10 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    folder   /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+    ↓ 18 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 1 more
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+    ↓ 17 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 2 more
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen/cmd
+    ↓ 16 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 3 more
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen/cmd
+    with     in the background · claude
+    ↓ 15 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 4 more
+             x/xxxxxxxxxx/demo/work/reo
+             pen/cmd
+    with     in the background · claude
+             attach e5f6a7b8
+    ↓ 14 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 5 more
+             pen/cmd
+    with     in the background · claude
+             attach e5f6a7b8
+    types    cd --
+    ↓ 13 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 6 more
+    with     in the background · claude
+             attach e5f6a7b8
+    types    cd --
+             /xxxxxxx/xxx/xxxxxx-xxx/-x
+    ↓ 12 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 7 more
+             attach e5f6a7b8
+    types    cd --
+             /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+    ↓ 11 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 8 more
+    types    cd --
+             /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+    ↓ 10 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 9 more
+             /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+    ↓ 9 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 10 more
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+    ↓ 8 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 11 more
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen/cmd && claude attach
+    ↓ 7 more
+
+↑↓ · space · ← · enter · q
+== after 'j': widest line 39 columns, last frame 11 lines (terminal 40x12); still running: True
+reopen · 1 of 5 in full
+
+› ○ claude  (reviewer-2)   40 min ago …
+    ↑ 12 more
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen/cmd && claude attach
+             e5f6a7b8
+    ↓ 6 more
+
+↑↓ · space · ← · enter · q
+== after '\\x1b': widest line 39 columns, last frame 9 lines (terminal 40x12); still running: True
+reopen · reopen · 5 sessions to bring …
+
+› ○ claude  (reviewer-2)   40 min ago …
+    reopen/cmd · in the background · c…
+    handoff no longer lists its role r…
+    ↓ 4 more
+
+⚠ skips permission checks: 1 of the ti…
+↑↓ · space · a · n · i · enter opens 3…
+== after 'q': widest line 23 columns, last frame 1 lines (terminal 40x12); still running: False
+reopen: nothing opened.

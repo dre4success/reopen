@@ -1,0 +1,18 @@
+# command: the runs below, each under sandbox-exec with a profile that kills the process the moment it opens a connection to any address but localhost (shown first); the session variables CLAUDE_CODE_SESSION_ID, CLAUDE_PID and CLAUDE_PROJECT_DIR removed
+# date: 2026-11-19 23:27:56 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac; 2.1.329 (Claude Code)
+## the profile: (version 1)(allow default)(deny network-outbound (remote ip) (with send-signal SIGKILL))(allow network-outbound (remote ip "localhost:*"))
+## controls
+curl http://192.0.2.1/ (a documentation address; nothing leaves the Mac): exit 137 (137: killed at the attempt)
+curl http://127.0.0.1:9/: exit 7 (7: refused, not killed: localhost is allowed)
+## claude agents --json, as it is
+exit 137
+exit 137
+exit 137
+## claude agents --json with CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1, as reopen runs it
+exit 0, 8 entries, 2 background
+exit 0, 8 entries, 2 background
+exit 0, 8 entries, 2 background
+## the same without the sandbox, for comparison
+exit 0, 8 entries, 2 background, 2 of them with no pid
+## reading: as it is, claude agents --json opens a connection off the Mac on every run, which its answer doesn't need; with CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 it opens none and answers the same. A background session can be listed with no process (no pid), so a live process can't stand in for this list.

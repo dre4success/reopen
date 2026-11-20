@@ -1,0 +1,30 @@
+# command: osascript iterm-probe.applescript '<scratch>/iterm probe dir' (below), then the contents of each tab read back by AppleScript three seconds later, then the window closed
+# date: 2026-11-19 22:40:59 UTC
+# by: Opus 5.5 (implementer), Claude Code in iTerm2, on the operator's Mac, with the operator's leave in this session
+## iTerm2 version: 3.7.8
+## the script
+on run argv
+	set dir to item 1 of argv
+	tell application "iTerm2"
+		set w to (create window with default profile)
+		tell current session of w to write text "cd -- '" & dir & "' && echo \"reopen probe tab 1: $PWD\""
+		tell w
+			set t to (create tab with default profile)
+			tell current session of t to write text "echo 'reopen probe tab 2' && printf '%s\\n' \"it's quoted\""
+		end tell
+		return id of w
+	end tell
+end run
+## osascript printed the new window's id (52376), took 0.93 s, and macOS asked nothing: osascript ran from a shell inside iTerm2, so iTerm2 drove itself
+## the two tabs' contents, blank lines dropped, scratch path shortened
+---- tab
+Last login: Thu Nov 19 22:33:11 on ttys011
+cd -- '<scratch>/iterm probe dir' && echo "reopen probe tab 1: $PWD"
+reopen probe tab 1: <scratch>/iterm probe dir
+---- tab
+Last login: Thu Nov 19 22:40:59 on ttys012
+echo 'reopen probe tab 2' && printf '%s\n' "it's quoted"
+reopen probe tab 2
+it's quoted
+## reading: the text typed before the shell's prompt waited for it and ran; quotes and a space in the folder held; the second tab began in another folder (the profile reuses the last folder), so each tab must cd first
+## not tried: osascript from another terminal app (Terminal.app), where macOS asks for Automation permission to control iTerm2

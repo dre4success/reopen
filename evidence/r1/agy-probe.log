@@ -1,0 +1,80 @@
+# command: python3 agy-probe.py <step>, one run per step in the order e1 e2 e4 e3 f g, through drv.py (a pty driver), in a scratch git repo whose .agents/hooks.json (below) runs probe-hook.py at SessionStart. Before the first run, settings.json, history.jsonl, the two cache files and the folder listings were copied to the scratchpad.
+# date: 2026-11-19 22:45 to 23:09 UTC
+# by: Opus 5.5 (implementer's probe fork), Claude Code, on the operator's Mac
+# versions: agy 1.5.13. The operator allowed these Antigravity sessions in chat.
+# <scratch repo>/.agents/hooks.json:
+#   {
+#     "reopen-probe": {
+#       "SessionStart": [
+#         {"command": "exec python3 <scratch>/probe-agy/probe-hook.py agy <scratch>/probe-agy/hooklog.jsonl <scratch>/probe-agy/outside <repository>/evidence/r1/.probe-outside", "timeout": 30, "type": "command"}
+#       ]
+#     }
+#   }
+# The env each session got: HOME, USER, TERM=xterm-256color, LANG, SHELL, PATH, HANDOFF_TEST_NOTIFY (a scratch file; none was written). handoff's global agy hooks also ran (no .handoff/ in the scratch repo, so they did nothing).
+# An exploratory run first (22:46:32, its cli log removed): agy with the same flags, nothing typed, showed the folder trust question with "Yes, I trust this folder" as the default and the status line "Gemini 3.8 Flash · low / auto ·". `agy models` (22:45:26, its cli log removed) listed the models.
+
+22:59:53 ## E1 a new conversation: agy --model gemini-3.8-flash-low --dangerously-skip-permissions
+22:59:53    (the folder's trust question: answered Yes, the default, with Enter)
+22:59:55    ready: True
+22:59:57    status line before typing: Gemini 3.8 Flash · low (<plan>)
+22:59:57    processes: 4600  4573 agy --model gemini-3.8-flash-low --dangerously-skip-permissions
+23:00:17    reply seen: True
+23:00:17    hook ran: stdin={"artifactDirectoryPath": "~/.gemini/antigravity-cli/brain/f92d3bb1-5ecc-4239-b9ba-09acc1302f06", "conversationId": "f92d3bb1-5ecc-4239-b9ba-09acc1302f06", "cwd": "<scratch>/probe-agy/repo", "hookEventName": "SessionStart", "lastUserInput": "Reply with the single word ready.  cwd=<scratch>/probe-agy/repo/.agents
+23:00:17      parent: 4600  4573 Thu Nov 19 22:59:53 2026     agy --model gemini-3.8-flash-low --dangerously-skip-permissions
+23:00:17      grandparent: 4573  4569 Thu Nov 19 22:59:53 2026     /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python agy-probe.py e1
+23:00:17      write outside the repo: {"<scratch>/probe-agy/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+23:00:17      env: {"ANTIGRAVITY_CONVERSATION_ID": "f92d3bb1-5ecc-4239-b9ba-09acc1302f06"}
+23:00:17    conversation id: f92d3bb1-5ecc-4239-b9ba-09acc1302f06; its database's mtime: 23:00:13
+23:00:17    screen: ⡿ Gen / ready / ⡿ Gen erating... / > / ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── / esc to cancel auto · Gemini 3.8 Flash · low / e r / ? for shortcuts
+23:00:18    closed; process alive: False; database mtime after close: 23:00:18
+{"artifactDirectoryPath": "~/.gemini/antigravity-cli/brain/f92d3bb1-5ecc-4239-b9ba-09acc1302f06", "conversationId": "f92d3bb1-5ecc-4239-b9ba-09acc1302f06", "cwd": "<scratch>/probe-agy/repo", "hookEventName": "SessionStart", "lastUserInput": "Reply with the single word ready. Do not run any command.", "modelName": "gemini-3.8-flash-low", "transcriptPath": "~/.gemini/antigravity-cli/brain/f92d3bb1-5ecc-4239-b9ba-09acc1302f06/.system_generated/logs/transcript_full.jsonl", "workspacePaths": ["<scratch>/probe-agy/repo"]}
+23:00:30    NOTE on E1: "reply seen" matched the word in the typed prompt's echo; the database's mtime and the transcript (below) show the turn did run.
+23:00:30    E1's conversation folder: brain/<id>/.system_generated/logs/ holds transcript.jsonl and transcript_full.jsonl (829 bytes each). Line 0: {"step_index": 0, "source": "USER_EXPLICIT", "type": "USER_INPUT", "status": "DONE", "created_at": "...", "content": "<USER_REQUEST>\nReply with the single word ready. Do not run any command.\n</USER_REQUEST>\n<ADDITIONAL_METADATA>..."}; line 1: {"type": "PLANNER_RESPONSE", "source": "MODEL", "model": "gemini-3.8-flash-low", "content": "ready", ...}
+23:01:00 ## E2 the conversation again with no flags: agy --conversation f92d3bb1-5ecc-4239-b9ba-09acc1302f06
+23:01:00    database mtime before: 23:00:18
+23:01:20    ready: True
+23:01:24    status line at resume, nothing typed: Gemini 4 Neon · high (<plan>)
+23:01:24    hooks run with nothing typed: 0
+23:01:24    processes: 5818  5817 agy --conversation f92d3bb1-5ecc-4239-b9ba-09acc1302f06
+23:01:48    a permission question appeared: False
+23:01:48    screen: ⣷ Runni / ⣯ Ru nning / ⣟ Run ning / ⡿ Runn ing c / ⢿ Runni ng co / ⣻ Running comm / ⣽ Running comma / ⣾ Running c omman / probe-ok / ⣾ Running co mmand ... / > / ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── / esc to cancel auto · Gemini 4 Neon · high / ? for shortcuts
+23:01:48    status line after the turn: Gemini 4 Neon · high
+23:01:48    database mtime after the turn: 23:00:18
+23:01:52    closed; process alive: False
+23:02:10    E2, read afterwards: the hook log still has one line (E1's): no SessionStart ran for the resumed conversation, before or after the typed turn. transcript.jsonl's new PLANNER_RESPONSE lines (steps 4 and 6) say "model": "gemini-4-neon-high", the default, not E1's gemini-3.8-flash-low. conversations/<id>.db's mtime moved only at the close (23:00:18 -> 23:01:52); transcript.jsonl's moved at the last step (23:01:47).
+23:02:10    E2's echo ran with no question, but the status line says "auto", so that alone does not show the permission skipping came back: E4 and E3 below.
+23:02:23 ## E4 the E1 conversation (started with --dangerously-skip-permissions) again with no flags: agy --conversation f92d3bb1-5ecc-4239-b9ba-09acc1302f06
+23:02:44    ready: True
+23:04:02    a permission question appeared: False; the file was made: True
+23:04:02    screen: ────────────────────────────���─────────────────────────────────────────────────────────────────────────────────────────────────────────────────  /  esc to cancel    auto  · Gemini 4 Neon · high      ⣽  /  /  /    ⣾   Run ning   /  /  /     ⣷   Runn ing c  /  /  /     ⣯   Runni ng co  /  /  /     ⣟   Runnin g com  /  /  /     ⡿   Running  comma  /  /  /     ⢿   Running c omman  /  /  /     ⣻   Running co mmand  /  /  /     ⣽   Running com mand.  /  /  /     ⣾   Running comma nd...  /  /  /     ⣷   Running comman  /  /  /     ⣯   Running command  /  /  /     ⣟   Running command.  /  /  /     ⡿   Running command...  /  /  /     ⢿  /  /  /    ⣻  /  /  /    ⣽  /  /  /    ⣾  /  /  /    ⣷  /  /  /    ⣯   R  /  /  /    ⣟   Ru  /  /  /    ⡿   Runn  /  /  /     ⢿   Runni  /  /  /     ⣻   R unnin  /  /  /     ⣽   Ru nning  /  /  /     ⣾   Runn ing c  /  /  /     ⣷   Runni ng co  /  /  /     ⣯   Runnin g com  /  /  /     ⣟   Running  comm  /  /  /     ⡿   Running c omman  /  /  /     ⢿   Running co mmand  /  /  /     ⣻   Running com mand.  /  /  /   
+23:04:07    closed; process alive: False
+23:04:26 ## E3 the control: a new conversation without --dangerously-skip-permissions: agy --model gemini-3.8-flash-low
+23:04:47    ready: True
+23:05:43    a permission question appeared: False; the file was made: True
+23:05:43    screen: ──────  /  >   /  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────  /  esc to cancel    auto  · Gemini 3.8 Flash · low            touch /User    / ⣻   Running c omman d...   /  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────  /  >   /  ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────���─────────────────────────────────────  /  esc to cancel    auto  · Gemini 3.8 Flash · low        s/<user>  /  /  /       s/    /  /  /     ⣽  /  /      <repository>/evidence/r  /   o mmand  /  /       1/.probe-out  /  /  /       side/agy-tou  /  /  /       ch-e3  / ⣾   Running com mand.  /  /       m and..  /  /       /  /  /  /  ? for shortcuts    
+23:05:48    closed; process alive: False
+23:05:48    E3's conversation: 99e35dc0-9ff0-47dc-9ae7-bcfc3182ca56
+23:05:50    E3 and E4: neither asked; in agy's default mode ("auto" on the status line) a touch outside the workspace runs without a question, with or without the flag. So whether --dangerously-skip-permissions comes back is NOT shown by these runs; the status line never shows it.
+23:06:09 ## F the conversation with a first message: agy --conversation f92d3bb1-5ecc-4239-b9ba-09acc1302f06 --prompt-interactive You were reopened. Read your handoff inbox.
+23:06:54    hooks run with nothing typed: see above
+23:06:54    screen: ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── / esc to cancel auto · Gemini 4 Neon · high / et me know / ⡿ / ⢿ The workspace lacks the expected `.handoff/` directory, which suggests a possible issue with the s etup / if you'd like me to run handoff in / et up or / it or take a specific r / , 387 tokens / ole. / u p or / ⣻ / ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── / > Auto mode: edits & safe commands auto-approved (shift+tab to cycle) / ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────��─────────────────────────── / ? for shortcuts auto · Gemini 4 Neon · high
+23:06:54    still running (interactive): True
+23:06:54    database mtime: 23:04:07
+23:06:58    closed; process alive: False
+23:07:10    F, read afterwards: the transcript's USER_INPUT lines (4), the last: '<USER_REQUEST>\nYou were reopened. Read your handoff inbox.\n</USER_REQUEST>\n<ADDI' at 2026-11-19T23:06:12Z
+23:07:10    models in the transcript's PLANNER_RESPONSE lines, in order: ['gemini-3.8-flash-low', 'gemini-4-neon-high', 'gemini-4-neon-high', 'gemini-4-neon-high', 'gemini-4-neon-high', 'gemini-4-neon-high', 'gemini-4-neon-high', 'gemini-4-neon-high', 'gemini-4-neon-high']
+23:07:10    hook lines so far: 2 (E1's and E3's SessionStart only)
+23:07:10 ## G print mode: agy -p --model gemini-3.8-flash-low Reply with the single word ok. Do not run any command.
+23:07:10    exit 2, stdout: ''
+23:07:20    FAILED TRY (above): agy -p takes the next argument as its prompt, so `-p --model X "<prompt>"` exits 2 with: Error: -p took "--model" as its prompt, so the intended prompt was left as an argument and ignored. Rerun with the prompt after -p.
+23:07:28 ## G print mode: agy --model gemini-3.8-flash-low -p Reply with the single word ok. Do not run any command.
+23:07:33    exit 0, stdout: 'ok'
+23:07:33    hook ran: stdin={"artifactDirectoryPath": "~/.gemini/antigravity-cli/brain/99005bb1-4a68-44bb-8336-b7b4094039fe", "conversationId": "99005bb1-4a68-44bb-8336-b7b4094039fe", "cwd": "<scratch>/probe-agy/repo", "hookEventName": "SessionStart", "lastUserInput": "Reply with the single word ok. Do  cwd=<scratch>/probe-agy/repo/.agents
+23:07:33      parent: 13590 13589 Thu Nov 19 23:07:28 2026     agy --model gemini-3.8-flash-low -p Reply with the single word ok. Do not run any command.
+23:07:33      grandparent: 13589 13585 Thu Nov 19 23:07:28 2026     /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python agy-probe.py g
+23:07:33      write outside the repo: {"<scratch>/probe-agy/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+23:07:33      env: {"ANTIGRAVITY_CONVERSATION_ID": "99005bb1-4a68-44bb-8336-b7b4094039fe"}
+23:09:00 ## Cleanup, as FACTS.md lists, for the three probe conversations f92d3bb1 (E1, E2, E4, F), 99e35dc0 (E3), 99005bb1 (G):
+23:09:00    removed brain/<id>/ x3, conversations/<id>.db x3, annotations/<id>.pbtxt x2 (G made none), 4 lines of history.jsonl (the operator's own new line kept), 2 entries of cache/conversation_metadata.json, 1 of cache/last_conversations.json (the scratch repo's), 8 log/cli-*.log (the probes', the exploratory run's and agy models'), and in conversation_summaries.db 3 rows of conversation_summaries, 4 of conversations_fts, 0 of conversation_parents.
+23:09:00    settings.json restored from the copy (it had gained the scratch repo in trustedWorkspaces); it now matches the copy. last_conversations.json matches its copy. conversation_metadata.json differs from its copy only in two of the operator's conversations' cached times and summaries, rewritten by agy while the probes ran; left as agy wrote them.
+23:09:00    No probe process is left (ps). The scratch Codex daemons were stopped; the scratch CODEX_HOME's auth.json copy was deleted.

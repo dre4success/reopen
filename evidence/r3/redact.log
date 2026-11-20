@@ -1,0 +1,27 @@
+# command: a redaction script, run once in the repository (kept local, since it names what it redacts), then the checks below; files read and written byte for byte (Python's newline='', so a screen's carriage returns stay)
+# date: 2026-11-20 10:10:37 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac, on r3-public-evidence
+# For reviewer-2's #92 and reviewer-3's #84: what the round-1 evidence says of the operator's accounts and folders, which isn't evidence for anything reopen rests on.
+## what was redacted, by file
+evidence/r1/claude-probe.log: the /status screen, cut to what the probe used (version, the session's name, id and kind, cwd, model), with a note naming what was cut; /permissions tabs 0 to 3 of the two runs that showed them, 8 lines, each replaced by a note (tab 4, Workspace, kept). Round 1 also cut lines 101 to 104, the failed try's: they held Claude Code's question about the added folder, with its default "No, exit", which the evidence cites, and no rule. Round 3 put them back as on main.
+evidence/r1/agy-probe.log: the plan's name in the status line, 2 lines, written <plan>; scratch paths
+evidence/r1/codex-probe.log, codex-settings.log: scratch paths, written <scratch>; agy-probe.py: the repository's folder, a literal path under ~ when it ran, now an input, PROBE_OUTSIDE: an absolute folder, the same the scratch repo's hooks.json passes probe-hook.py last, with a comment saying so; the probe stops with a word if it is unset or relative, and the touch command it types quotes the path as one shell word (rounds 4 and 5). Checked without starting agy, from a scratch copy beside drv.py in a folder with a space in its name: the target is in PROBE_OUTSIDE, shlex splits the command into touch and the one path (one with spaces and a quote too), and an empty or relative PROBE_OUTSIDE stops it
+evidence/r1/ui-narrow.log, ui-short.log: from main again (round 3), only the scratch path masked with x at the same width, chunk by chunk where a screen wraps it (30 and 33 lines). Round 1 masked the path's pieces wherever they occurred, words such as reopen and claude among them; round 3 undid that.
+internal/agent/agent_test.go: a test's transcript id, which was this session's own, is a made-up one
+## the diff's size: lines in and out are equal, nothing added or dropped
+ 8 files changed, 231 insertions(+), 231 deletions(-)
+## carriage returns in the one file that has them, before and after
+evidence/r1/agy-probe.log: 50 -> 50
+## left in the tracked files, after (0 is right): the scratch folder's name, the folders it names, this session's id, the plans
+scratch folder: 0 files
+the operator's folder names: 0 files
+this session's id: 0 files
+the Google plan's name: 0 files
+the /status screen's account lines: 0 files
+## round 3: every changed line compared with main's (the picker logs: same length, and every changed character an x over a character of the path)
+evidence/r1/ui-narrow.log: 121 lines on main, 121 now, 30 changed, 0 changed other than by masking a path's characters
+evidence/r1/ui-short.log: 174 lines on main, 174 now, 33 changed, 0 changed other than by masking a path's characters
+evidence/r1/claude-probe.log: 191 lines on main, 191 now, 9 changed
+evidence/r1/agy-probe.log: 81 lines on main, 81 now, 9 changed
+evidence/r1/codex-probe.log: 204 lines on main, 204 now, 73 changed
+evidence/r1/codex-settings.log: 19 lines on main, 19 now, 5 changed

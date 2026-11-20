@@ -1,0 +1,112 @@
+# command: gofmt -l . ; go vet ./... ; go test -race -count=1 -v ./... (summarised: each test's result), then go test -count=2 ./... ; at commit d615df8 on r1-build, a clean tree
+# date: 2026-11-20 00:22:17 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac; go version go1.25.3 darwin/arm64
+## gofmt -l . (empty means formatted)
+## go vet ./...
+(clean)
+## go test -race -count=1 -v ./...
+--- PASS: TestBinary (5.62s)
+--- PASS: TestHookRecordsClaudeCode (0.06s)
+--- PASS: TestHookSkips (0.10s)
+--- PASS: TestHookRecordsCodexAndAntigravity (0.07s)
+--- PASS: TestHookWorktreeSharesTheList (0.11s)
+--- PASS: TestHookFollowsTheLatestRun (0.08s)
+--- PASS: TestHookClearReplacesTheEntryFromItsProcess (0.10s)
+--- PASS: TestHookKeepsFlagsFromABackgroundWorker (0.11s)
+--- PASS: TestHookNotesTheRole (0.09s)
+--- PASS: TestPrintResumesClosedSessionsNewestFirst (0.17s)
+--- PASS: TestPrintQuotesAFolder (0.13s)
+--- PASS: TestOpenSessionsAreLeftOut (0.18s)
+--- PASS: TestResumeInsideASessionMovesItsProcess (0.28s)
+--- PASS: TestLeftOutAndDropped (0.24s)
+--- PASS: TestRolesAndTheFirstMessage (0.41s)
+--- PASS: TestBackgroundFollowsContinuedIn (0.24s)
+--- PASS: TestStaleContinuedInIsIgnored (0.15s)
+--- PASS: TestRefusedInAnAgentsSession (0.57s)
+--- PASS: TestPickAndOpen (0.48s)
+--- PASS: TestListAndForget (0.29s)
+--- PASS: TestHooksPrintsValidSettings (0.05s)
+--- PASS: TestAnEmptyListMakesNoFolder (0.08s)
+--- PASS: TestOutsideARepository (0.07s)
+--- PASS: TestBypassModeComesBackOnlyWithItsFlag (0.15s)
+--- PASS: TestHookCodexThroughItsDaemon (0.43s)
+--- PASS: TestHostileFolders (0.27s)
+--- PASS: TestForgetRefusedInAnAgentsSession (0.06s)
+--- PASS: TestListPointsAtTheHookLog (0.13s)
+--- PASS: TestOpeningFailsWithTheCommandsShown (0.38s)
+--- PASS: TestEmptyStates (0.17s)
+--- PASS: TestConcurrentHooks (0.21s)
+--- PASS: TestPickerKeys (0.00s)
+--- PASS: TestRenderFitsTheTerminal (0.14s)
+--- PASS: TestAgentsEnv (0.00s)
+--- PASS: TestKeysSplitAndCoalesced (0.00s)
+--- PASS: TestRenderNarrow (0.15s)
+--- PASS: TestAgyHoldsItsPresenceLock (0.17s)
+--- PASS: TestOpenByWhatAProcessResumes (0.19s)
+--- PASS: TestContinuedInKeepsANewerRunsFlags (0.24s)
+--- PASS: TestAnAgentsSessionChangesNothing (0.39s)
+--- PASS: TestDetailScreenScrolls (0.20s)
+--- PASS: TestWrap (0.00s)
+--- PASS: TestNoHomeFolder (0.08s)
+--- PASS: TestControlBytesAreShownClean (0.24s)
+--- PASS: TestForgetStartsOverAnUnreadableList (0.09s)
+--- PASS: TestForkKeepsBoth (0.46s)
+--- PASS: TestForgetPrintsNoCleanedCommand (0.16s)
+--- PASS: TestOnlyLeavingWorksWhenTooSmall (0.00s)
+--- PASS: TestDetailsShowTheExactCommand (0.18s)
+PASS
+ok  	reopen/cmd/reopen	15.414s
+--- PASS: TestInteractive (0.00s)
+--- PASS: TestFlagsKeepOnlyStartFlagsThatMatter (0.00s)
+--- PASS: TestSkipsChecks (0.00s)
+--- PASS: TestResume (0.00s)
+--- PASS: TestTranscriptAndLabel (0.02s)
+--- PASS: TestShorten (0.00s)
+--- PASS: TestContinuedIn (0.00s)
+--- PASS: TestClean (0.00s)
+--- PASS: TestLabelIsCleaned (0.00s)
+--- PASS: TestCodexMetaAndSettings (0.01s)
+--- PASS: TestAntigravityTranscript (0.00s)
+--- PASS: TestResumedID (0.00s)
+--- PASS: TestTitleAndFirst (0.00s)
+--- PASS: TestModeFarBack (0.01s)
+PASS
+ok  	reopen/internal/agent	1.161s
+?   	reopen/internal/gitx	[no test files]
+--- PASS: TestOpenPassesCommandsAsArguments (0.17s)
+--- PASS: TestOpenSaysWhatMacOSRefused (0.06s)
+PASS
+ok  	reopen/internal/iterm	1.451s
+--- PASS: TestGetReadsExactArguments (0.03s)
+--- PASS: TestGetGone (0.00s)
+--- PASS: TestGetZombie (0.20s)
+--- PASS: TestScanFindsAnID (0.09s)
+--- PASS: TestNamed (0.00s)
+PASS
+ok  	reopen/internal/proc	1.560s
+--- PASS: TestRead (0.01s)
+PASS
+ok  	reopen/internal/roles	1.238s
+--- PASS: TestQuote (0.00s)
+--- PASS: TestJoinRoundTrip (0.03s)
+PASS
+ok  	reopen/internal/shell	1.257s
+--- PASS: TestUpdateWritesPrivately (0.01s)
+--- PASS: TestUpdateUnchangedWritesNothing (0.00s)
+--- PASS: TestLoadRefusesAnotherFormat (0.00s)
+--- PASS: TestUpdateConcurrent (0.41s)
+--- PASS: TestNoHomeNoWrite (0.00s)
+--- PASS: TestResetAnUnreadableList (0.01s)
+PASS
+ok  	reopen/internal/store	1.666s
+?   	reopen/internal/term	[no test files]
+## go test -count=2 ./... (each test twice, for flakiness)
+ok  	reopen/cmd/reopen	32.681s
+ok  	reopen/internal/agent	0.141s
+?   	reopen/internal/gitx	[no test files]
+ok  	reopen/internal/iterm	0.617s
+ok  	reopen/internal/proc	0.872s
+ok  	reopen/internal/roles	0.214s
+ok  	reopen/internal/shell	0.255s
+ok  	reopen/internal/store	1.060s
+?   	reopen/internal/term	[no test files]

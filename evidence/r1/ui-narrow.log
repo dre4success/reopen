@@ -1,0 +1,120 @@
+# command: python3 ui-narrow-drive.py <demo> <demo>/work/reopen 40 30 j i '+[B' qn: the built reopen (this branch's working tree) in a pseudo-terminal of 40 columns by 30 lines, the sample sessions of ui-demo-setup.py, a stand-in osascript; '+' splits one step into two writes 20 ms apart
+# date: 2026-11-19 23:39:42 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac
+# The widest line of each screen is measured with escape sequences removed. The demo's folder is long on purpose: the scratch folder's own path.
+== start: widest line 39 columns (terminal 40)
+== after 'j': widest line 39 columns; still running: True
+reopen · reopen · 5 sessions to bring …
+
+  ○ claude  (reviewer-2)   40 min ago …
+    reopen/cmd · in the background · c…
+    handoff no longer lists its role r…
+› ● claude  implementer    3 h ago    …
+    ⚠ skips permission checks  reopen …
+  ● codex   reviewer       yesterday  …
+    reopen · gpt-6.2-sol, approvals on…
+    first message: "You were reopened.…
+  ● agy     reviewer-3     3 days ago …
+    reopen · --model gemini-4-neon-hig…
+    first message: "You were reopened.…
+  ○ claude  (implementer)  6 days ago …
+    reopen · 116 B · f0e1d2c3
+    not ticked: its role implementer i…
+
+⚠ skips permission checks: 1 of the ti…
+↑↓ · space · a · n · i · enter opens 3…
+
+== after 'i': widest line 39 columns; still running: True
+reopen · reopen · 5 sessions to bring …
+
+    ↑ 1 more
+› ● claude  implementer    3 h ago    …
+    folder   /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen
+    with     bypassPermissions mode
+             --dangerously-skip-permiss
+             ions
+    ⚠ skips permission checks
+    types    cd --
+             /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen && claude --resume
+             a1b2c3d4-1111-4111-8111-11
+             1111111111
+             --dangerously-skip-permiss
+             ions
+    ↓ 3 more
+
+⚠ skips permission checks: 1 of the ti…
+↑↓ · space · a · n · i · enter opens 3…
+
+== after '\\x1b+[B': widest line 39 columns; still running: True
+reopen · reopen · 5 sessions to bring …
+
+    ↑ 1 more
+› ● claude  implementer    3 h ago    …
+    folder   /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen
+    with     bypassPermissions mode
+             --dangerously-skip-permiss
+             ions
+    ⚠ skips permission checks
+    types    cd --
+             /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen && claude --resume
+             a1b2c3d4-1111-4111-8111-11
+             1111111111
+             --dangerously-skip-permiss
+             ions
+    ↓ 3 more
+
+⚠ skips permission checks: 1 of the ti…
+↑↓ · space · a · n · i · enter opens 3…
+reopen · reopen · 5 sessions to bring …
+
+    ↑ 2 more
+› ● codex   reviewer       yesterday  …
+    folder   /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen
+    with     gpt-6.2-sol, approvals
+             on-request,
+             workspace-write
+    types    cd --
+             /xxxxxxx/xxx/xxxxxx-xxx/-x
+             xxxx-xxxxxx-xxxxxxxx-
+             xx-xxxxxx-xxxxxx/xxxxxxxx-
+             xxxx-xxxx-xxxx-xxxxxxxxxxx
+             x/xxxxxxxxxx/demo/work/reo
+             pen && codex resume
+             019a6a3f-2222-7222-8222-22
+             2222222222 'You were
+             reopened. Read your
+             handoff inbox.'
+    history  ~/.codex/sessions/2026/11/
+    ↓ 2 more
+
+⚠ skips permission checks: 1 of the ti…
+↑↓ · space · a · n · i · enter opens 3…
+
+== after 'qn': widest line 23 columns; still running: False
+reopen: nothing opened.
+

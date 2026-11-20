@@ -1,0 +1,91 @@
+# command: python3 e2e-claude.py (beside this log), run under env -i with HOME, USER and a short PATH, twice: at db26395 (try 1, kept) and at 14f9898 (try 2), each with reopen built from that commit
+# date: 2026-11-20 00:02:07 to 00:05:30 UTC
+# by: Opus 5.5 (implementer), Claude Code 2.1.329, on the operator's Mac
+# reopen's home was a scratch folder (HOME=<scratch>/rhome for the hook and for reopen; CLAUDE_CONFIG_DIR=~/.claude for reopen, so it reads Claude Code's own transcripts). The real ~/.reopen/ was never touched. Step 4 runs the line reopen --print printed under zsh -f, as a tab's shell would, plus --settings with reopen's hook, which the operator would have in their user settings instead. The session was started with --permission-mode bypassPermissions alone, for reviewer-2's question (#25, point 17): does a bare resume keep that mode?
+# The round-1 run of this check, from an earlier build, is e2e-claude-round1.log.
+## try 1, at db26395: the resumed session came back in auto mode, yet reopen's row had warned that it comes back skipping permission checks (so 14f9898 fixed the row)
+00:02:07 ## 1. a new session: claude --session-id d9c3d644 --model haiku --permission-mode bypassPermissions, with reopen's hook (reopen at db26395)
+00:02:09    (the folder's trust question: answered Yes, with Down and Enter)
+00:02:17    footer: ['⏵⏵ bypass permissions on']
+00:02:21    reply written: True
+00:02:21    the transcript's permission-mode lines: ['bypassPermissions', 'bypassPermissions', 'bypassPermissions']
+00:02:21    list file proj-e742816e189e.json mode 600
+00:02:21    entries: [{"cli": "claude", "id": "d9c3d644-37a9-4920-ba6d-c357be77cea8", "pid": 6492, "args": ["claude", "--session-id", "d9c3d644-37a9-4920-ba6d-c357be77cea8", "--model", "haiku", "--permission-mode", "bypassPermissions", "--settings", "{\"hooks\": {\"SessionStart\": [{\"hooks\": [{\"type\": \"command\", \"command\": \"/usr/bin/env\", \"args\": [\"HOME=<scratch>/rhome\", \"<scratch>/
+00:02:21 ## 2. while it runs
+00:02:21 $ reopen --print  -> exit 0
+00:02:22 $ reopen list  -> exit 0
+00:02:22    out: reopen · proj · 1 session, newest first
+00:02:22    out: 
+00:02:22    out:   open        claude  –  just now  Alpha word reply
+00:02:22    out:               ⚠ skips permission checks  proj · bypassPermissions mode · 362 KB · d9c3d644
+00:02:24 ## 3. closed (process ended)
+00:02:27 $ reopen --print  -> exit 0
+00:02:27    out: cd -- <scratch>/proj && claude --resume d9c3d644-37a9-4920-ba6d-c357be77cea8
+00:02:27    err: reopen: ⚠ claude d9c3d644 comes back skipping permission checks.
+00:02:27 $ reopen list  -> exit 0
+00:02:27    out: reopen · proj · 1 session, newest first
+00:02:27    out: 
+00:02:27    out:   closed      claude  –  just now  Alpha word reply
+00:02:27    out:               ⚠ skips permission checks  proj · bypassPermissions mode · 364 KB · d9c3d644
+00:02:27 ## 4. the printed line, as a tab types it: /bin/zsh -f -c <line>, plus --settings with reopen's hook (the operator's user settings would have it)
+00:03:00    footer at the resume: ['(shift+tab to cycle) · ← 2 agents\x1b[>0q']
+00:03:00 $ reopen --print  -> exit 0
+00:03:04    reply written after the resume: True
+00:03:04    the transcript's permission-mode lines now: ['bypassPermissions', 'bypassPermissions', 'bypassPermissions']
+00:03:04    footer after a turn: ['.']
+00:03:05 ## 5. closed again
+00:03:08 $ reopen --print  -> exit 0
+00:03:08    out: cd -- <scratch>/proj && claude --resume d9c3d644-37a9-4920-ba6d-c357be77cea8
+00:03:08 $ reopen list  -> exit 0
+00:03:08    out: reopen · proj · 1 session, newest first
+00:03:08    out: 
+00:03:08    out:   closed      claude  –  just now  Alpha word reply
+00:03:08    out:               proj · auto mode · 375 KB · d9c3d644
+00:03:08 ## done: session d9c3d644-37a9-4920-ba6d-c357be77cea8
+## try 2, at 14f9898
+00:04:12 ## 1. a new session: claude --session-id b7de3a55 --model haiku --permission-mode bypassPermissions, with reopen's hook (reopen at 14f9898)
+00:04:40    footer: ['⏵⏵ bypass permissions on']
+00:04:44    reply written: True
+00:04:44    the transcript's permission-mode lines: ['bypassPermissions', 'bypassPermissions', 'bypassPermissions']
+00:04:44    list file proj-e742816e189e.json mode 600
+00:04:44    entries: [{"cli": "claude", "id": "b7de3a55-3182-48e6-a4e5-bdf0ef7898b1", "pid": 9560, "args": ["claude", "--session-id", "b7de3a55-3182-48e6-a4e5-bdf0ef7898b1", "--model", "haiku", "--permission-mode", "bypassPermissions", "--settings", "{\"hooks\": {\"SessionStart\": [{\"hooks\": [{\"type\": \"command\", \"command\": \"/usr/bin/env\", \"args\": [\"HOME=<scratch>/rhome\", \"<scratch>/
+00:04:44 ## 2. while it runs
+00:04:44 $ reopen --print  -> exit 0
+00:04:45 $ reopen list  -> exit 0
+00:04:45    out: reopen · proj · 1 session, newest first
+00:04:45    out: 
+00:04:45    out:   open        claude  –  just now  Alpha
+00:04:45    out:               proj · 362 KB · b7de3a55
+00:04:45    out:               it was in bypassPermissions mode, which a resume doesn't keep without the flag that allows it
+00:04:47 ## 3. closed (process ended)
+00:04:49 $ reopen --print  -> exit 0
+00:04:49    out: cd -- <scratch>/proj && claude --resume b7de3a55-3182-48e6-a4e5-bdf0ef7898b1
+00:04:49 $ reopen list  -> exit 0
+00:04:49    out: reopen · proj · 1 session, newest first
+00:04:49    out: 
+00:04:49    out:   closed      claude  –  just now  Alpha
+00:04:49    out:               proj · 364 KB · b7de3a55
+00:04:49    out:               it was in bypassPermissions mode, which a resume doesn't keep without the flag that allows it
+00:04:49 ## 4. the printed line, as a tab types it: /bin/zsh -f -c <line>, plus --settings with reopen's hook (the operator's user settings would have it)
+00:05:22    footer at the resume: ['(shift+tab to cycle) · ← 2 agents\x1b[>0q']
+00:05:22 $ reopen --print  -> exit 0
+00:05:26    reply written after the resume: True
+00:05:26    the transcript's permission-mode lines now: ['bypassPermissions', 'bypassPermissions', 'bypassPermissions']
+00:05:26    footer after a turn: ['.']
+00:05:28 ## 5. closed again
+00:05:30 $ reopen --print  -> exit 0
+00:05:30    out: cd -- <scratch>/proj && claude --resume b7de3a55-3182-48e6-a4e5-bdf0ef7898b1
+00:05:30 $ reopen list  -> exit 0
+00:05:30    out: reopen · proj · 1 session, newest first
+00:05:30    out: 
+00:05:30    out:   closed      claude  –  just now  Alpha
+00:05:30    out:               proj · auto mode · 375 KB · b7de3a55
+00:05:30 ## done: session b7de3a55-3182-48e6-a4e5-bdf0ef7898b1
+## try 2's transcript, its mode lines and the operator's turns in order (line number, type, mode)
+1 permission-mode bypassPermissions
+5 user turn, permissionMode bypassPermissions
+24 permission-mode bypassPermissions
+35 permission-mode bypassPermissions
+42 user turn, permissionMode auto
+53 permission-mode auto
+## reading: started with --permission-mode bypassPermissions, the session ran in that mode; resumed by the bare line reopen printed, its next turn ran in auto mode, and a permission-mode line says auto. So a bare claude --resume doesn't keep bypassPermissions without --dangerously-skip-permissions or --allow-dangerously-skip-permissions (acceptEdits it keeps: claude-probe.log A).

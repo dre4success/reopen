@@ -1,0 +1,190 @@
+# command: python3 -I claude-probe.py x|a1|a2|b|dirs|c|d <session ids>, in a scratch git repository under the scratchpad, each session started with a clean environment (HOME, USER, TERM, LANG, SHELL, PATH and HANDOFF_TEST_NOTIFY only), --model haiku and the probe hook claude-probe-hook.py added through --settings; then claude agents --json, claude stop, claude rm and claude purge -y of the scratch project
+# date: 2026-11-19 22:41 to 22:53 UTC
+# by: Opus 5.5 (implementer's probe fork), Claude Code 2.1.329, on the operator's Mac
+
+## What it shows (each with the lines below that show it)
+
+A. Check 1, `claude --resume <id>` with no flags, after a start with --model haiku --permission-mode acceptEdits --add-dir <dir2>:
+   - the model comes back: /status says "Model: claude-haiku-5-5" and the new reply's message.model is claude-haiku-5-5 (22:47:22, 22:47:27);
+   - the permission mode comes back: the footer says "accept edits on" and the transcript's permission-mode lines stay acceptEdits (22:47:17, 22:47:27);
+   - the added folder does not: /permissions, Workspace lists only "Started in: <proj>" (22:49:30). With --add-dir passed on the resume it lists dir2 (22:51:25), after a question at the start whose default is "No, exit" (22:50:34, 22:51:05).
+   - The resume's SessionStart has source "resume", the same id, a new CLAUDE_PID whose args are the resume's own (22:46:48).
+   - A first try with --permission-mode plan failed (marked): in plan mode the reply came from claude-sonnet-5-5, not Haiku.
+B. Check 2, `/resume` typed inside a running session: the process stays (CLAUDE_PID 81329 before and after; ps shows the same start time). SessionStart runs again with source "resume" and the picked session's id; CLAUDE_PROJECT_DIR and the hook's folder stay (22:48:17, 22:48:41). The process's arguments still name the first id (`claude --resume 486da06b-…`) while it now runs ecff2b57 (22:48:50).
+C. /background: the old process ends; the new session's SessionStart has source "fork", a new id and a new CLAUDE_PID, whose args are `claude bg-spare --bg-spare /tmp/cc-daemon-501/<hex>/spare/<hex>.claim.sock`: none of the session's own flags (22:52:22.883). The old transcript's continued-in line was written at 22:52:22.131, before that hook ran, but it is not the last line: cost-state, file-history-snapshot, last-prompt and cost-state follow it (22:52:38). The screen names the job: "backgrounded · c705d0a4" and `claude attach c705d0a4` (22:52:26). `claude agents --json` lists it as {"pid": 87770, "id": "c705d0a4", "kind": "background", "sessionId": "c705d0a4-…", "status": "idle", "state": "blocked", "cwd": <proj>, "name": …, "startedAt": …}; the job id is the new session id's first 8 characters here (22:52:26).
+D. CLAUDE_CODE_ENTRYPOINT reaches hooks: "cli" for an interactive run (and for the /background worker), "sdk-cli" for `claude -p` (22:52:55). The -p run's CLAUDE_PID args hold -p and the prompt itself (`… --settings {…} Reply with the one word delta.`).
+Also seen: `ps -o lstart=` prints the date in the locale's order: "Thu Nov 19 22:41:39 2026" under LANG=en_US.UTF-8 (the hook's), "Thu 19 Nov 22:46:47 2026" in the driver's environment.
+
+## The run, as the driver printed it (failed tries kept, marked)
+
+22:41:39 ## X a plain session for the /resume picker: claude --session-id ecff2b57-a1fe-4b16-9d91-0f9deb25fab7 --model haiku
+22:41:40    (the folder's trust question: answered Yes, with Down and Enter)
+22:41:53    asked 'Reply with the one word alpha.': reply 'alpha', message.model=claude-haiku-5-5
+22:41:53    hook 22:41:42.341 SessionStart source=startup session=ecff2b57-a1fe-4b16-9d91-0f9deb25fab7 CLAUDE_PID=72924 ppid=72924 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:41:53         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/ecff2b57-a1fe-4b16-9d91-0f9deb25fab7.jsonl
+22:41:53         ps of CLAUDE_PID: 72924 Thu Nov 19 22:41:39 2026     claude --session-id ecff2b57-a1fe-4b16-9d91-0f9deb25fab7 --model haiku --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:41:53         transcripts' last lines then: {}
+22:42:00 ## X closed; process alive
+22:42:00 (marked: the 'process alive' above is the driver's misreading: it checked before the kill was reaped; ps a minute later shows no such process. The driver now waits for the kill.)
+22:42:18 ## A1 claude --session-id 2196b285-16a9-4bb2-89e5-41b17e35e48b --model haiku --permission-mode plan --add-dir <dir2>
+22:42:19    (the folder's trust question: answered Yes, with Down and Enter)
+22:44:00    asked 'Reply with the one word pong.': reply '', message.model=None
+22:44:00    hook 22:42:20.696 SessionStart source=startup session=2196b285-16a9-4bb2-89e5-41b17e35e48b CLAUDE_PID=73715 ppid=73715 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:44:00         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/2196b285-16a9-4bb2-89e5-41b17e35e48b.jsonl
+22:44:00         ps of CLAUDE_PID: 73715 Thu Nov 19 22:42:18 2026     claude --session-id 2196b285-16a9-4bb2-89e5-41b17e35e48b --model haiku --permission-mode plan --add-dir <scratchpad>/cprobe/dir2 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:44:00         transcripts' last lines then: {"ecff2b57": {"last_type": "atis-latch", "continuedIn": null}}
+22:44:00    transcript permission-mode lines: ['plan', 'plan']
+22:44:00    screen: d / p / o / n / g / .
+22:44:00 (marked FAILED TRY: A1 with --permission-mode plan. The reply "pong" came from claude-sonnet-5-5, not Haiku, in plan mode, then an ExitPlanMode tool call waited on a dialog that the driver didn't answer, so its reply check missed "pong" and its next keys went into the dialog. The driver then hung reaping the exiting process because it had stopped reading the terminal; it was killed at 22:46 and the session process ended with it. From the transcript afterwards: two permission-mode lines, both "plan"; the assistant lines' message.model claude-sonnet-5-5. Rerun below with --permission-mode acceptEdits, which has no plan-mode model or dialog; the driver now keeps reading while it waits for the process to end.)
+22:46:20 ## A1 claude --session-id 486da06b-ef7c-4500-bdd1-5354643a3307 --model haiku --permission-mode acceptEdits --add-dir <dir2>
+22:46:21    (the folder's trust question: answered Yes, with Down and Enter)
+22:46:33    asked 'Reply with the one word pong.': reply 'pong', message.model=claude-haiku-5-5
+22:46:33    hook 22:46:22.388 SessionStart source=startup session=486da06b-ef7c-4500-bdd1-5354643a3307 CLAUDE_PID=79017 ppid=79017 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:46:33         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/486da06b-ef7c-4500-bdd1-5354643a3307.jsonl
+22:46:33         ps of CLAUDE_PID: 79017 Thu Nov 19 22:46:20 2026     claude --session-id 486da06b-ef7c-4500-bdd1-5354643a3307 --model haiku --permission-mode acceptEdits --add-dir <scratchpad>/cprobe/dir2 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:46:33         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "ecff2b57": {"last_type": "atis-latch", "continuedIn": null}}
+22:46:33    transcript permission-mode lines: ['acceptEdits', 'acceptEdits', 'acceptEdits']
+22:46:33    screen: d / p / o / n / g / .
+22:46:43 ## A1 closed; process ended
+22:46:47 ## A2 claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307, no flags but --settings (the probe hook)
+22:47:11    (no trust question within 20 s)
+22:47:17    hook 22:46:48.038 SessionStart source=resume session=486da06b-ef7c-4500-bdd1-5354643a3307 CLAUDE_PID=79573 ppid=79573 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:47:17         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/486da06b-ef7c-4500-bdd1-5354643a3307.jsonl
+22:47:17         ps of CLAUDE_PID: 79573 Thu Nov 19 22:46:47 2026     claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:47:17         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "atis-latch", "continuedIn": null}}
+22:47:17    screen at start: ⏺pong / ✻Brewed for 0s · done 10:46 PM / ◐ medium · /effort / ──────────────────────────────────────────────────────────────────────────────── / ❯ / ──────────────────────────────────────────────────────────────────────────────── / ⏵⏵ accept edits on / (shift+tab to cycle) · ← 2 agents[>0q
+22:47:22    /status screen: t / t / t / u / uu / stat / u / s / ss / /status / ✻ Brewed for 0s · done 10:46 PM / ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ / Settings Status Config Usage Stats / Version:2.1.329 / Session name: Pong reply / Session ID:486da06b-ef7c-4500-bdd1-5354643a3307 / Session kind:interactive / cwd: <scratchpad>/cprobe/proj / Model: claude-haiku-5-5 / ←/→ to switch · Esc to close / [cut: peer address, login method and plan, organization, email, cloud sessions, MCP servers, setting sources and auto mode's server, which the probe didn't use]
+22:47:27    asked 'Reply with the one word ping.': reply 'ping', message.model=claude-haiku-5-5
+22:47:27    transcript permission-mode lines now: ['acceptEdits', 'acceptEdits', 'acceptEdits']
+22:47:31    asked about added folders: reply 'None.'
+22:47:31    screen footer: o / n / e / .
+22:47:31 ## B /resume typed in the running session (process 79573), picking session ecff2b57-a1fe-4b16-9d91-0f9deb25fab7
+22:47:36    picker screen: ✻ Loading sessions… / ✻Sautéed for 0s · done 10:47 PM / ❯ List the directories you are allowed to access besides the current one, as / bare paths, or say none. / ⏺None. / ✻ Cogitated for 0s · done 10:47 PM / ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ / Resume session / ╭──────────────────────────────────────────────────────────────────────────╮ / │ ⌕ Sarch… │ / ╰──────────────────────────────────────────────────────────────────────────╯ / ❯Pong reply / 3 minutes ago · master · 370.5KB / Alpha word reply / 5 minutes ago · master · 364.7KB / Ctrl+A to show all projects · Space to preview · Ctrl+R to rename · Type to / search · Enter to resume · Esc to close / proj / Ctrl+B to only show curren bach · Spac / preview · Crl+R to rename· Typeto arch · Enter to resume · Esc to close
+22:47:38    picker after typing alpha: bare paths, or say none. / ⏺ None. / ✻Cogitated for 0s · done 10:47 PM / ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ / Resume session / ╭──────────────────────────────────────────────────────────────────────────╮ / │⌕ al │ / ╰──────────────────────────────────────────────────────────────────────────╯ / ❯ / p / h / a
+22:47:46    screen after the pick: ╭──────────────────────────────────────────────────────────────────────────╮ / │ ⌕ alpha │ / ╰──────────────────────────────────────────────────────────────────────────╯ / proj / ❯Alpha word reply / 5 minutes ago · master · 364.7KB / Ctrl+A to show all projects · Ctrl+B to only show current branch · Space to / preview· Ctrl+Rto rename · Type to search · Enter to resume · Esc to close
+22:47:46    the driver's child (pid 79573) is alive
+22:47:46    ps of it: 79573 Thu 19 Nov 22:46:47 2026     claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:47:56 ## A2/B closed; process ended
+22:47:46 (marked FAILED TRY for B: the driver pressed Enter before the picker had filtered to "alpha", and the picker stayed open; no SessionStart ran, the process (79573) stayed the same and on its first id. Rerun below as step b, waiting before Enter. The added-folder answer "None." is the model's word, not a check; step dirs below looks at /permissions instead.)
+22:48:16 ## B claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307, then /resume typed in it, picking the session whose first prompt names 'alpha'
+22:48:24    hook 22:48:17.025 SessionStart source=resume session=486da06b-ef7c-4500-bdd1-5354643a3307 CLAUDE_PID=81329 ppid=81329 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:48:24         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/486da06b-ef7c-4500-bdd1-5354643a3307.jsonl
+22:48:24         ps of CLAUDE_PID: 81329 Thu Nov 19 22:48:16 2026     claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:48:24         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "atis-latch", "continuedIn": null}}
+22:48:24    the driver's child, the session's process: 81329
+22:48:35    picker after typing 'alpha': Resume session / ╭──────────────────────────────────────────────────────────────────────────╮ / │⌕ al │ / ╰──────────────────────────────────────────────────────────────────────────╯ / ❯ / p / h / a
+22:48:41    no SessionStart yet; screen: ╰──────────────────────────────────────────────────────────────────────────╯ / proj / ❯Alpha word reply / 6 minutes ago · master · 364.7KB / Ctrl+A to show all projects · Ctrl+B to only show current branch · Space to / preview· Ctrl+Rto rename · Type to search · Enter to resume · Esc to close
+22:48:50    hook 22:48:41.486 SessionStart source=resume session=ecff2b57-a1fe-4b16-9d91-0f9deb25fab7 CLAUDE_PID=81329 ppid=81329 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:48:50         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/ecff2b57-a1fe-4b16-9d91-0f9deb25fab7.jsonl
+22:48:50         ps of CLAUDE_PID: 81329 Thu Nov 19 22:48:16 2026     claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:48:50         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "atis-latch", "continuedIn": null}}
+22:48:50    screen after the pick: ❯ Reply with the one word alpha. / ⏺alpha / ✻Crunched for 0s · done 10:41 PM / ──────────────────────────────────────────────────────────────────────────────── / ❯ / ──────────────────────────────────────────────────────────────────────────────── / ⏵⏵ accept edits on / (shift+tab to cycle) · ← 2 agents
+22:48:50    the driver's child (pid 81329) is alive
+22:48:50    ps of it: 81329 Thu 19 Nov 22:48:16 2026     claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["/
+22:49:00 ## B closed; process ended
+22:49:08 ## dirs claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 (no flags but --settings): what /permissions lists as working folders
+22:49:16    hook 22:49:08.973 SessionStart source=resume session=486da06b-ef7c-4500-bdd1-5354643a3307 CLAUDE_PID=82969 ppid=82969 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:49:16         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/486da06b-ef7c-4500-bdd1-5354643a3307.jsonl
+22:49:16         ps of CLAUDE_PID: 82969 Thu Nov 19 22:49:08 2026     claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:49:16         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "cost-state", "continuedIn": null}}
+22:49:21    /permissions tab 0: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:49:23    /permissions tab 1: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:49:26    /permissions tab 2: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:49:28    /permissions tab 3: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:49:30    /permissions tab 4: bare paths, or say none. / ⏺None. / ✻Cogitated for 0s · done 10:47 PM / ❯ /resume / ⎿  Resume cancelled / ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ / Permissions Recently blocked Allow Ask DenyAutomode Workspace / Claude Code can read files in the workspace, andmakeeditswhenauto-accept / edits is on. / Started in: <scratchpad>/cprobe/proj / ❯Add directory… / Esc to close
+22:49:43 ## dirs closed; process ended
+22:49:50 ## dirs claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --add-dir DIR2: what /permissions lists as working folders
+22:50:12    /permissions tab 4: 
+22:50:15 ## dirs closed; process ended
+22:50:15 (marked FAILED TRY: the control run's output was filtered by grep and showed no hook and an empty tab; rerun below unfiltered)
+22:50:21 ## dirs claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --add-dir DIR2: what /permissions lists as working folders
+22:50:34    /permissions tab 0:  / Esc to exit · To add it, press ↓toYes,thenEnter(yourtextiskept) / No, exit / Yes, add it / ❯No, exit / Yes, add it
+22:50:36    /permissions tab 1: 
+22:50:38    /permissions tab 2: 
+22:50:40    /permissions tab 3: 
+22:50:42    /permissions tab 4: 
+22:50:45 ## dirs closed; process ended
+22:50:45 (marked FAILED TRY: with --add-dir on the resume, Claude Code first asked whether to add the folder, default "No, exit"; the driver's /permissions keys answered it and the session exited. Rerun below answering Yes with Down and Enter.)
+22:50:57 ## dirs claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --add-dir DIR2: what /permissions lists as working folders
+22:51:05    (the added folder's question: answered Yes, with Down and Enter)
+22:51:12    hook 22:51:07.173 SessionStart source=resume session=486da06b-ef7c-4500-bdd1-5354643a3307 CLAUDE_PID=85911 ppid=85911 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:51:12         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/486da06b-ef7c-4500-bdd1-5354643a3307.jsonl
+22:51:12         ps of CLAUDE_PID: 85911 Thu Nov 19 22:50:57 2026     claude --resume 486da06b-ef7c-4500-bdd1-5354643a3307 --add-dir <scratchpad>/cprobe/dir2 --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:51:12         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "cost-state", "continuedIn": null}}
+22:51:17    /permissions tab 0: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:51:19    /permissions tab 1: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:51:21    /permissions tab 2: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:51:23    /permissions tab 3: [cut: the operator's own permission rules and auto mode's text; the probe used only tab 4, Workspace]
+22:51:25    /permissions tab 4: ✻Cogitated for 0s · done 10:47 PM / ❯ /resume / ⎿  Resume cancelled / ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ / Permissions Recently blocked Allow Ask Deny Auto mode Workspace / Claude Code can read files in the workspace, andmakeeditswhenauto-accept / edits is on. / Started in: <scratchpad>/cprobe/proj / ❯Add directory… / <scratchpad>/cprobe/dir2 / Esc to close
+22:51:39 ## dirs closed; process ended
+22:51:49 ## C claude --session-id a1df3294-4ab5-4308-a583-b05d9dd33309 --model haiku, one exchange, then /background
+22:52:13    (no trust question within 20 s)
+22:52:20    asked 'Reply with the one word gamma.': reply 'gamma', message.model=claude-haiku-5-5
+22:52:20    hook 22:51:49.954 SessionStart source=startup session=a1df3294-4ab5-4308-a583-b05d9dd33309 CLAUDE_PID=87054 ppid=87054 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:52:20         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/a1df3294-4ab5-4308-a583-b05d9dd33309.jsonl
+22:52:20         ps of CLAUDE_PID: 87054 Thu Nov 19 22:51:49 2026     claude --session-id a1df3294-4ab5-4308-a583-b05d9dd33309 --model haiku --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}}
+22:52:20         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "cost-state", "continuedIn": null}}
+22:52:26    screen after /background: dd / d / /background / ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔ / · Moving to the background… / ✢ / ✳ / ✶[<u[>4m[>4m[<u78[>4m[<u78backgrounded · c705d0a4 / claude agents list sessions / claude attach c705d0a4 open in this terminal / claude logs c705d0a4 show recent output / claude stop c705d0a4 stop this session
+22:52:26    hook 22:52:22.883 SessionStart source=fork session=c705d0a4-31bd-42ed-a30c-57bc55c9c05f CLAUDE_PID=87770 ppid=87770 entry=cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:52:26         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/c705d0a4-31bd-42ed-a30c-57bc55c9c05f.jsonl
+22:52:26         ps of CLAUDE_PID: 87770 Thu Nov 19 22:52:22 2026     claude bg-spare --bg-spare /tmp/cc-daemon-501/c227913e/spare/92ebd978.claim.sock
+22:52:26         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "c705d0a4": {"last_type": "agent-name", "continuedIn": null}, "a1df3294": {"last_type": "cost-state", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "cost-state", "continuedIn": null}}
+22:52:26    the old process (pid 87054) is gone
+22:52:26    old transcript's last line now: {"type": "cost-state", "sessionId": "a1df3294-4ab5-4308-a583-b05d9dd33309", "totalCostUSD": 0.0032956100000000005, "totalAPIDuration": 1421, "totalAPIDurationWithoutRetries": 1399, "totalToolDuration": 0, "totalLinesAdded": 0, "totalLinesRemoved": 0, "totalDuration": 33034, "startTime": 179512870936
+22:52:26    claude agents --json, this probe's rows: [{"pid": 87770, "id": "c705d0a4", "cwd": "<scratchpad>/cprobe/proj", "kind": "background", "startedAt": 1795128742475, "sessionId": "c705d0a4-31bd-42ed-a30c-57bc55c9c05f", "name": "Gamma one-word reply", "status": "idle", "state": "blocked"}]
+22:52:38 ## C after: the old transcript (a1df3294) has 45 lines; its last 6 types: ['cost-state', 'continued-in', 'cost-state', 'file-history-snapshot', 'last-prompt', 'cost-state']
+22:52:38    line 41 of 45 is continued-in: {"type": "continued-in", "timestamp": "2026-11-19T22:52:22.131Z", "sessionId": "a1df3294-4ab5-4308-a583-b05d9dd33309", "continuedInSessionId": "c705d0a4-31bd-42ed-a30c-57bc55c9c05f"}
+22:52:38    its mtime 22:52:22
+22:52:47 ## C cleanup: claude stop c705d0a4; claude rm c705d0a4
+stopped c705d0a4
+removed c705d0a4
+   ps of 87770 after: 
+22:52:55 ## D claude -p --session-id 32f7756f-f2e2-4c9d-9ff2-88b21ad466de --model haiku 'Reply with the one word delta.'
+22:52:57    exit 0, printed 'delta'
+22:52:57    hook 22:52:55.644 SessionStart source=startup session=32f7756f-f2e2-4c9d-9ff2-88b21ad466de CLAUDE_PID=88506 ppid=88506 entry=sdk-cli cwd=<scratchpad>/cprobe/proj PROJECT_DIR=<scratchpad>/cprobe/proj
+22:52:57         transcript_path=~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj/32f7756f-f2e2-4c9d-9ff2-88b21ad466de.jsonl
+22:52:57         ps of CLAUDE_PID: 88506 Thu Nov 19 22:52:55 2026     claude -p --session-id 32f7756f-f2e2-4c9d-9ff2-88b21ad466de --model haiku --settings {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": "/usr/bin/python3", "args": ["<scratchpad>/cprobe/hook.py"]}]}]}} Reply with the one word delta.
+22:52:57         transcripts' last lines then: {"2196b285": {"last_type": "atis-latch", "continuedIn": null}, "c705d0a4": {"last_type": "agent-name", "continuedIn": null}, "a1df3294": {"last_type": "cost-state", "continuedIn": null}, "486da06b": {"last_type": "cost-state", "continuedIn": null}, "ecff2b57": {"last_type": "cost-state", "continuedIn": null}}
+22:53:06 ## cleanup: claude agents --json rows for the probe, then claude purge --dry-run and -y of the scratch project
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+(eval):1: no such file or directory: env -i HOME=~ USER=<user> PATH=~/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin TERM=xterm-256color LANG=en_US.UTF-8
+   (marked FAILED TRY: the shell didn't split the env prefix, so neither command ran; rerun below)
+   probe rows in claude agents --json --all: []
+
+Purge plan for <scratchpad>/cprobe/proj:
+
+  dir:    ~/.claude/file-history/c705d0a4-31bd-42ed-a30c-57bc55c9c05f
+           file edit history for session c705d0a4-31bd-42ed-a30c-57bc55c9c05f
+  dir:    ~/.claude/projects/<scratchpad, as Claude Code names it>-cprobe-proj
+           project transcripts (.jsonl) and memory/
+  config: projects["<scratchpad>/cprobe/proj"]
+           project entry in ~/.claude.json (trust, history, MCP servers)
+  filter: ~/.claude/history.jsonl
+           12 prompt(s) typed in this project
+
+shell-snapshots/ are not project-scoped and will not be touched
+backups/ may still contain this project entry in old .claude.json snapshots (~/.claude/backups); at most 5 are kept and they rotate out automatically
+
+Purging deletes data only on this computer, not anything stored by Anthropic.
+Dry run: 4 item(s) would be deleted.
+22:53:22 ## cleanup: claude purge -y <scratch project>
+
+Purging deletes data only on this computer, not anything stored by Anthropic.
+Purged 4 items for <scratchpad>/cprobe/proj.
+(eval):1: no matches found: ~/.claude/projects/*cprobe-proj*
+   transcripts left for the probe ids: 0
+   probe processes left: 0
+   alerts file: none

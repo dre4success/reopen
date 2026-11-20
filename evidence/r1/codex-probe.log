@@ -1,0 +1,203 @@
+# command: python3 codex-probe.py <step>, one run per step in the order a1 a2 a2b a3 a4 a5 a0 a6 a6b b head d, through drv.py (a pty driver), in a scratch git repo with a scratch CODEX_HOME: copies of auth.json and a trimmed config.toml (model gpt-6.2-sol, reasoning effort low, the scratch repo trusted), and the hooks.json below. codex-enter.py and codex-enter2.py are the two driver tests named in the failed tries.
+# date: 2026-11-19 22:41 to 23:08 UTC
+# by: Opus 5.5 (implementer's probe fork), Claude Code, on the operator's Mac
+# versions: codex-cli 0.170.0
+# hooks.json in the scratch CODEX_HOME:
+#   {
+#     "hooks": {
+#       "SessionStart": [
+#         {"hooks": [{"type": "command", "command": "exec python3 <scratch>/probe-cx/probe-hook.py codex <scratch>/probe-cx/hooklog.jsonl <scratch>/probe-cx/outside <repository>/evidence/r1/.probe-outside", "timeout": 30}]}
+#       ]
+#     }
+#   }
+# The env each session got: HOME, USER, TERM=xterm-256color, LANG, SHELL, PATH, CODEX_HOME, HANDOFF_TEST_NOTIFY (a scratch file; none was written). No CLAUDE_*, CODEX_* or ANTIGRAVITY_* variable.
+# <scratch> below is the session scratchpad; the repo is <scratch>/probe-cx/repo. The outside-write test writes and removes a file in <scratch>/probe-cx/outside and in this folder's .probe-outside/ (removed afterwards).
+
+22:43:18 ## A1 a new session, read-only sandbox, on-request approvals: codex -m gpt-6-luna -s read-only -a on-request
+22:43:19    (Codex asks to review the new hook: answered 2, Trust all and continue)
+22:43:21    TUI ready: True
+22:45:27    session id: None; first turn complete: False
+22:45:27    screen: Trusting hooks... › Review hooks Trust all and continue Continue without trusting (hooks won't run) >_ Ope AI Codex (v0.170.0) <scratch>/probe-cx/repo ⣀⣤⣤⣤⣀⣀ ⣠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣦⣤⣤⣤⣤⣤⣤⡀ ⢀⣾⣿⣿⠿⠋⠉⠉⢉⣭⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣷⣄ ⣀⣾⣿⣿⠃ ⣀⣴⣾⣿⣿⡿⠟⠋ ⣀⡀ ⠈⠙⢿⣿⣿⣧ ⣀⣶⣿⣿⣿⣿⡇ ⢸⣿⣿⡿⠛⠉⢀⣠⣴⣿⣿⣿⣷⣦⣀⠈⢻⣿⣿⡇ ⣰⣿⣿⡿⢿⣿⣿⡇ ⢸⣿⣿⢀⣤⣶⣿⣿⣿⠟⠛⠻⣿⣿⣿⣿⣮⣿⣿⡷ ⢰⣿⣿⡟⠁⢸⣿⣿⡇ ⢸⣿⣿⣿⣿⠿⠿⣿⣿⣿⣦⣄⡀⠈⠛⠿⣿⣿⣿⣧⡀ ⣾⣿⣿⠃ ⢸⣿⣿⡇ ⢸⣿⣿⠋⠁ ⠈⠙⢻⣿⣿⣿⣶⣤⡀ ⠹⢿⣿⣷⡄ ⢸⣿⣿⣇ ⠸⣿⣿⣷⣦⣼⣿⣿ ⢸⣿⣿⠻⢿⣿⣿⡇ ⠘⣿⣿⣿ ⠈⢿⣿⣿⣦⡀⠈⠛⠿⣿⣿⣿⣿⣄⡀ ⢀⣠⣼⣿⣿ ⣿⣿⡇ ⣿⣿⣿⠇ ⢻⣿⣿⣿⣷⣦⣀⠈⠙⠻⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿ ⣿⣿⡇ ⣠⣿⣿⣿ ⢸⣿⣿⡿⢿⣿⣿⣿⣦⣠⣴⣿⣿⣿⡿⠟⠋⢸⣿⣿ ⣿⣿⣷⣴⣿⣿⣿⠃ ⠘⣿⣿⣷ ⠈⠛⢿⣿⣿⣿⠿⠋⠉ ⣠⣴⣿⣿⣿ ⣿⣿⣿⣿⣿⠟⠁ ⠻⣿⣿⣿⣤⣀ ⠈⠉ ⢀⣤⣶⣿⣿⣿⠿⠟⠁ ⣰⣿⣿⡟⠋⠁ ⠈⠿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⠟⠋⠁ ⣠⣼⣿⣿⡟ ⠙⠛⠛⠛⠻⠛⢿⣿⣿⣿⣿⣷⣾⣿⣿⣿⡿⠏ ⠈⠙⠛⠿⠿⠿⠿⠛⠉ › Ask Codex to do anything ? for shortcuts › Ask Codex to do anything GPT-6-Luna default · <scratch>/probe-cx/repo ← agen s · ? for shortcuts low · <scratch>/scrat hpad/ robe-cx/repo › Rep GPT-6-Luna low · <scratch>/probe-cx/repo l y wi t h the s › Reply with the single word ready. Do not run any command.
+22:45:29    closed; process alive: False
+22:45:29    rollout: None
+22:45:30    FAILED TRY (above): the prompt was typed too fast, so Codex took it as a paste and the Enter as a newline; no turn started. The driver now waits 1 s before Enter. A second try follows.
+22:46:03 ## A1 a new session, read-only sandbox, on-request approvals: codex -m gpt-6-luna -s read-only -a on-request
+22:46:18    TUI ready: True
+22:48:26    session id: None; first turn complete: False
+22:48:26    screen: >_ OpenAI Codex (v0.170.0) loading ⣀⣤⣤⣤⣀⣀ ⣠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣦⣤⣤⣤⣤⣤⣤⡀ ⢀⣾⣿⣿⠿⠋⠉⠉⢉⣭⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣷⣄ ⣀⣾⣿⣿⠃ ⣀⣴⣾⣿⣿⡿⠟⠋ ⣀⡀ ⠈⠙⢿⣿⣿⣧ ⣀⣶⣿⣿⣿⣿⡇ ⢸⣿⣿⡿⠛⠉⢀⣠⣴⣿⣿⣿⣷⣦⣀⠈⢻⣿⣿⡇ ⣰⣿⣿⡿⢿⣿⣿⡇ ⢸⣿⣿⢀⣤⣶⣿⣿⣿⠟⠛⠻⣿⣿⣿⣿⣮⣿⣿⡷ ⢰⣿⣿⡟⠁⢸⣿⣿⡇ ⢸⣿⣿⣿⣿⠿⠿⣿⣿⣿⣦⣄⡀⠈⠛⠿⣿⣿⣿⣧⡀ ⣾⣿⣿⠃ ⢸⣿⣿⡇ ⢸⣿⣿⠋⠁ ⠈⠙⢻⣿⣿⣿⣶⣤⡀ ⠹⢿⣿⣷⡄ ⢸⣿⣿⣇ ⠸⣿⣿⣷⣦⣼⣿⣿ ⢸⣿⣿⠻⢿⣿⣿⡇ ⠘⣿⣿⣿ ⠈⢿⣿⣿⣦⡀⠈⠛⠿⣿⣿⣿⣿⣄⡀ ⢀⣠⣼⣿⣿ ⣿⣿⡇ ⣿⣿⣿⠇ ⢻⣿⣿⣿⣷⣦⣀⠈⠙⠻⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿ ⣿⣿⡇ ⣠⣿⣿⣿ ⢸⣿⣿⡿⢿⣿⣿⣿⣦⣠⣴⣿⣿⣿⡿⠟⠋⢸⣿⣿ ⣿⣿⣷⣴⣿⣿⣿⠃ ⠘⣿⣿⣷ ⠈⠛⢿⣿⣿⣿⠿⠋⠉ ⣠⣴⣿⣿⣿ ⣿⣿⣿⣿⣿⠟⠁ ⠻⣿⣿⣿⣤⣀ ⠈⠉ ⢀⣤⣶⣿⣿⣿⠿⠟⠁ ⣰⣿⣿⡟⠋⠁ ⠈⠿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⠟⠋⠁ ⣠⣼⣿⣿⡟ ⠙⠛⠛⠛⠻⠛⢿⣿⣿⣿⣿⣷⣾⣿⣿⣿⡿⠏ ⠈⠙⠛⠿⠿⠿⠿⠛⠉ › Ask Codex to do anything ? for shortcuts <scratch>/probe-cx/repo › Ask Codex to do anything GPT-6-Luna default · <scratch>/probe-cx/repo ← agen s · ? for shortcuts low · <scratch>/scrat hpad/ robe-cx/repo › R GPT-6-Luna low · <scratch>/probe-cx/repo e p l › Reply with the single word ready. Do not run any command.
+22:48:28    closed; process alive: False
+22:48:28    rollout: None
+22:49:30    FAILED TRY (above, second): Codex turns on the kitty keyboard protocol (it writes ESC[>7u) and takes Enter only as ESC[13u; a plain CR or LF went into the prompt box. Found with codex-enter.py, whose own test turn ("say hi 0 1 2", session 01a1f5ff) is in the hook lines below. The driver now sends ESC[13u.
+22:49:05    (enter.py's test turn) hook ran: stdin={"session_id": "01a1f5ff-7533-7c33-926d-7d80c4fe0f7d", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-48-42-01a1f5ff-7533-7c33-926d-7d80c4fe0f7d.jsonl", "cwd": "<scratch>/probe-cx/repo", "hook_event_name": "SessionStart", "model": "gpt-6-luna", "permission_mode": "default", "source": "startup"}
+22:49:05      parent: 73491     1 Thu Nov 19 22:42:08 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:49:05      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:50:17 ## A1 a new session, read-only sandbox, on-request approvals: codex -m gpt-6-luna -s read-only -a on-request
+22:50:33    TUI ready: True
+22:52:41    session id: None; first turn complete: False
+22:52:41    screen: >_ OpenAI Codex (v0.170.0) loading ⣀⣤⣤⣤⣀⣀ ⣠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣦⣤⣤⣤⣤⣤⣤⡀ ⢀⣾⣿⣿⠿⠋⠉⠉⢉⣭⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣷⣄ ⣀⣾⣿⣿⠃ ⣀⣴⣾⣿⣿⡿⠟⠋ ⣀⡀ ⠈⠙⢿⣿⣿⣧ ⣀⣶⣿⣿⣿⣿⡇ ⢸⣿⣿⡿⠛⠉⢀⣠⣴⣿⣿⣿⣷⣦⣀⠈⢻⣿⣿⡇ ⣰⣿⣿⡿⢿⣿⣿⡇ ⢸⣿⣿⢀⣤⣶⣿⣿⣿⠟⠛⠻⣿⣿⣿⣿⣮⣿⣿⡷ ⢰⣿⣿⡟⠁⢸⣿⣿⡇ ⢸⣿⣿⣿⣿⠿⠿⣿⣿⣿⣦⣄⡀⠈⠛⠿⣿⣿⣿⣧⡀ ⣾⣿⣿⠃ ⢸⣿⣿⡇ ⢸⣿⣿⠋⠁ ⠈⠙⢻⣿⣿⣿⣶⣤⡀ ⠹⢿⣿⣷⡄ ⢸⣿⣿⣇ ⠸⣿⣿⣷⣦⣼⣿⣿ ⢸⣿⣿⠻⢿⣿⣿⡇ ⠘⣿⣿⣿ ⠈⢿⣿⣿⣦⡀⠈⠛⠿⣿⣿⣿⣿⣄⡀ ⢀⣠⣼⣿⣿ ⣿⣿⡇ ⣿⣿⣿⠇ ⢻⣿⣿⣿⣷⣦⣀⠈⠙⠻⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿ ⣿⣿⡇ ⣠⣿⣿⣿ ⢸⣿⣿⡿⢿⣿⣿⣿⣦⣠⣴⣿⣿⣿⡿⠟⠋⢸⣿⣿ ⣿⣿⣷⣴⣿⣿⣿⠃ ⠘⣿⣿⣷ ⠈⠛⢿⣿⣿⣿⠿⠋⠉ ⣠⣴⣿⣿⣿ ⣿⣿⣿⣿⣿⠟⠁ ⠻⣿⣿⣿⣤⣀ ⠈⠉ ⢀⣤⣶⣿⣿⣿⠿⠟⠁ ⣰⣿⣿⡟⠋⠁ ⠈⠿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⠟⠋⠁ ⣠⣼⣿⣿⡟ ⠙⠛⠛⠛⠻⠛⢿⣿⣿⣿⣿⣷⣾⣿⣿⣿⡿⠏ ⠈⠙⠛⠿⠿⠿⠿⠛⠉ › Ask Codex to do anything ? for shortcuts <scratch>/probe-cx/repo › Ask Codex to do anything GPT-6-Luna default · <scratch>/probe-cx/repo ← agen s · ? for shortcuts low · <scratch>/scrat hpad/ robe-cx/repo › R GPT-6-Luna low · <scratch>/probe-cx/repo e p l › Reply with the single word ready. Do not run any command.
+22:52:43    closed; process alive: False
+22:52:43    rollout: None
+22:53:20    FAILED TRY (above, third): the driver slept without reading the screen while it typed, so Codex was still taking the typed text as a paste when Enter came. codex-enter2.py (its test turn is session 01a1f603) showed that reading the screen for 3 s before ESC[13u submits. The driver now does that.
+22:53:37 ## A1 a new session, read-only sandbox, on-request approvals: codex -m gpt-6-luna -s read-only -a on-request
+22:53:52    TUI ready: True
+22:54:14    hook ran: stdin={"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:54:14      parent: 73491     1 Thu Nov 19 22:42:08 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:54:14      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:54:14      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:54:14      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:54:14    session id: 01a1f603-fb74-7380-84b9-3b5740a079c8; first turn complete: True
+22:54:14    screen: >_ OpenAI Codex (v0.170.0) loading ⣀⣤⣤⣤⣀⣀ ⣠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣦⣤⣤⣤⣤⣤⣤⡀ ⢀⣾⣿⣿⠿⠋⠉⠉⢉⣭⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣷⣄ ⣀⣾⣿⣿⠃ ⣀⣴⣾⣿⣿⡿⠟⠋ ⣀⡀ ⠈⠙⢿⣿⣿⣧ ⣀⣶⣿⣿⣿⣿⡇ ⢸⣿⣿⡿⠛⠉⢀⣠⣴⣿⣿⣿⣷⣦⣀⠈⢻⣿⣿⡇ ⣰⣿⣿⡿⢿⣿⣿⡇ ⢸⣿⣿⢀⣤⣶⣿⣿⣿⠟⠛⠻⣿⣿⣿⣿⣮⣿⣿⡷ ⢰⣿⣿⡟⠁⢸⣿⣿⡇ ⢸⣿⣿⣿⣿⠿⠿⣿⣿⣿⣦⣄⡀⠈⠛⠿⣿⣿⣿⣧⡀ ⣾⣿⣿⠃ ⢸⣿⣿⡇ ⢸⣿⣿⠋⠁ ⠈⠙⢻⣿⣿⣿⣶⣤⡀ ⠹⢿⣿⣷⡄ ⢸⣿⣿⣇ ⠸⣿⣿⣷⣦⣼⣿⣿ ⢸⣿⣿⠻⢿⣿⣿⡇ ⠘⣿⣿⣿ ⠈⢿⣿⣿⣦⡀⠈⠛⠿⣿⣿⣿⣿⣄⡀ ⢀⣠⣼⣿⣿ ⣿⣿⡇ ⣿⣿⣿⠇ ⢻⣿⣿⣿⣷⣦⣀⠈⠙⠻⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿ ⣿⣿⡇ ⣠⣿⣿⣿ ⢸⣿⣿⡿⢿⣿⣿⣿⣦⣠⣴⣿⣿⣿⡿⠟⠋⢸⣿⣿ ⣿⣿⣷⣴⣿⣿⣿⠃ ⠘⣿⣿⣷ ⠈⠛⢿⣿⣿⣿⠿⠋⠉ ⣠⣴⣿⣿⣿ ⣿⣿⣿⣿⣿⠟⠁ ⠻⣿⣿⣿⣤⣀ ⠈⠉ ⢀⣤⣶⣿⣿⣿⠿⠟⠁ ⣰⣿⣿⡟⠋⠁ ⠈⠿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⠟⠋⠁ ⣠⣼⣿⣿⡟ ⠙⠛⠛⠛⠻⠛⢿⣿⣿⣿⣿⣷⣾⣿⣿⣿⡿⠏ ⠈⠙⠛⠿⠿⠿⠿⠛⠉ › Ask Codex to do anything ? for shortcuts <scratch>/probe-cx/repo › Ask Codex to do anything GPT-6-Luna default · <scratch>/probe-cx/repo ← agen s · ? for shortcuts low · <scratch>/scrat hpad/ robe-cx/repo › R GPT-6-Luna low · <scratch>/probe-cx/repo e p l y w i t h t h e s i n g l e w o r d r e a d y . D o n o t r u n a n y c o m m a n d . › Reply with the single word ready. Do not run any command. › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo ← for agents · ? for shortcuts • Working (0s •
+22:54:14    closed; process alive: False
+22:54:14    rollout: <CODEX_HOME>/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl
+22:54:14    last turn_context: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "on-request", "sandbox_policy": {"type": "read-only"}, "effort": "low", "permission_profile": {"type": "managed", "file_system": {"type": "restricted", "entries": [{"path": {"type": "special", "value": {"kind": "root"}}, "access": "read"}]}, "network": "restricted"}, "turn_contexts": 1}
+22:54:22 ## A2 resume with no flags: codex resume 01a1f603-fb74-7380-84b9-3b5740a079c8
+22:54:23    TUI ready: True
+22:54:26    screen at resume: >_ OpenAI Codex (v0.170.0) loading Resuming session… › Ask Codex to do anything ? for shortcuts <scratch>/probe-cx/repo › Reply with the single word ready. Do not run any command. • ready Worked for 1s • 22:54 › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo ← agen s · ? for shortcuts
+22:54:44    hook ran: stdin={"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:54:44      parent: 73491     1 Thu Nov 19 22:42:08 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:54:44      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:54:44      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:54:44      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:54:44    turn complete: True
+22:54:44    screen: /repo e p l y w i t h t h e s i n g l e w o r d a g a i n . D o n o t r u n a n y c o m m a n d . › Reply with the single word again. Do not run any command. › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo ← for agents · ? for shortcuts • Working (0s • esc to interrupt) • Working (0s • esc to interrupt) › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo · Reply with the single word again. Do not run any command. ◦ 1 • ready Worked for 1s • 22:54
+22:54:44    last turn_context after the resumed turn: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "on-request", "sandbox_policy": {"type": "read-only"}, "effort": "low", "permission_profile": {"type": "managed", "file_system": {"type": "restricted", "entries": [{"path": {"type": "special", "value": {"kind": "root"}}, "access": "read"}]}, "network": "restricted"}, "turn_contexts": 2}
+22:54:44    thread_settings_applied events: [{"type": "thread_settings_applied", "thread_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "thread_settings": {"model": "gpt-6-luna", "model_provider_id": "openai", "service_tier": "default", "approval_policy": "on-request", "approvals_reviewer": "user", "requested_approvals_reviewer": "user", "permission_profile": {"type": "managed", "file_system": {"type": "restricted", "entries": [{"path": {"type": "special", "value": {"kind": "root"}}, "access": "read"}]}, "network": "restricted"}, "cwd": "<scratch>/probe-cx/repo", "runtime_workspace_roots": ["<scratch>/probe-cx/repo"], "reasoning_effort": "low", "collaboration_mode": {"mode": "default", "settings": {"model": "gpt-6-luna", "reasoning_effort": "low", "developer_instructions": "# Collaboration Mode: Default\n\nYou are now in Default mode. Any previous instructions for other modes (e.g. Plan mode) are no longer active.\n\nYour active mode changes only when new developer instructions with a different `<collaboration_mode>...</collaboration_mode>` change it; user requests or tool descriptions do not change mode by themselves. Known mode names are Default and Plan.\n\n## request_user_input availability\n\nUse the `request_user_input` tool only when it is listed in the available tools for this turn.\n\nIn Default mode, 
+22:55:05 ## A2b the scratch app-server daemon was stopped first, so the thread is read back from the rollout
+22:55:05 ## A2b resume with no flags, a new daemon: codex resume 01a1f603-fb74-7380-84b9-3b5740a079c8
+22:55:06    TUI ready: True
+22:55:29    hook ran: stdin={"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:55:29      parent: 92886 92883 Thu Nov 19 22:55:06 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:55:29      grandparent: 92883 92881 Thu Nov 19 22:55:05 2026     ~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex resume 01a1f603-fb74-7380-84b9-3b5740a079c8
+22:55:29      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:55:29      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:55:29    turn complete: True
+22:55:29    screen: <scratch>/probe-cx/repo ← for agents · ? for shortcuts • Working (0s • esc to interrupt) ◦ ◦ Working (0s • esc to interrupt) › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo · Reply with the single word afresh. Do not run any command. 1 • ◦ 2 • ready Worked for 2s • 22:55 afresh
+22:55:29    last turn_context after the resumed turn: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "on-request", "sandbox_policy": {"type": "read-only"}, "effort": "low", "permission_profile": {"type": "managed", "file_system": {"type": "restricted", "entries": [{"path": {"type": "special", "value": {"kind": "root"}}, "access": "read"}]}, "network": "restricted"}, "turn_contexts": 3}
+22:55:38 ## A3 resume with -m -s -a after the id: codex resume 01a1f603-fb74-7380-84b9-3b5740a079c8 -m gpt-6-luna -s workspace-write -a never
+22:55:38    TUI ready: True
+22:55:41    screen at resume: x (v0.170.0) loading Resuming session… › Ask Codex to do anything ? for shortcuts <scratch>/probe-cx/repo › Reply with the single word ready. Do not run any command. • ready Worked for 1s • 22:54 › Reply with the single word again. Do not run any command. • ready Worked for 1s • 22:54 › Reply with the single word afresh. Do not run any command. • ready Worked for 2s • 22:55 › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo · Reply afresh ← agen s · ? for shortcuts
+22:56:01    hook ran: stdin={"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:56:01      parent: 92886     1 Thu Nov 19 22:55:06 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:56:01      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:56:01      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:56:01      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:56:01    turn complete: True
+22:56:01    last turn_context: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "never", "sandbox_policy": {"type": "workspace-write", "network_access": false, "exclude_tmpdir_env_var": false, "exclude_slash_tmp": false}, "effort": "low", "permission_profile": {"type": "managed", "file_system": {"type": "restricted", "entries": [{"path": {"type": "special", "value": {"kind": "root"}}, "access": "read"}, {"path": {"type": "path", "path": "<scratch>/probe-cx/repo"}, "access": "write"}, {"path": {"type": "special", "value": {"kind": "slash_tmp"}}, "access": "write"}, {"path": {"type": "special", "value": {"kind": "tmpdir"}}, "access": "write"}, {"path": {"type": "path", "path": "<scratch>/probe-cx/repo/.git"}, "access": "read", "missing_path_behavior": "skip"}, {"path": {"type": "path", "path": "<scratch>/probe-cx/repo/.agents"}, "access": "read", "missing_path_behavior": "skip"}, {"path": {"type": "path", "path": "<scratch>/probe-cx/repo/.codex"}, "access": "read", "missing_path_behavior": "skip"}, {"path": {"type": "path", "path": "<scratch>/probe-cx/repo/.aws"}, "access": "read", "missing_path_behavior": "skip"}]}, "network": "restricted"}, "turn_contexts": 4}
+22:56:11 ## A4 resume with -s -a before resume: codex -s read-only -a on-request resume 01a1f603-fb74-7380-84b9-3b5740a079c8
+22:56:12    TUI ready: True
+22:56:15    screen at resume: <scratch>/probe-cx/repo › Reply with the single word ready. Do not run any command. • ready Worked for 1s • 22:54 › Reply with the single word again. Do not run any command. • ready Worked for 1s • 22:54 › Reply with the single word afresh. Do not run any command. • ready Worked for 2s • 22:55 › Reply with the single word third. Do not run any command. • third Worked for 1s • 22:55 › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo · Reply afresh ← agen s · ? for shortcuts
+22:56:33    hook ran: stdin={"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:56:33      parent: 92886     1 Thu Nov 19 22:55:06 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:56:33      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:56:33      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:56:33      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:56:33    turn complete: True
+22:56:33    last turn_context: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "on-request", "sandbox_policy": {"type": "read-only"}, "effort": "low", "permission_profile": {"type": "managed", "file_system": {"type": "restricted", "entries": [{"path": {"type": "special", "value": {"kind": "root"}}, "access": "read"}]}, "network": "restricted"}, "turn_contexts": 5}
+22:56:33 ## A5 resume with no flags again, after A4: codex resume 01a1f603-fb74-7380-84b9-3b5740a079c8
+22:56:34    TUI ready: True
+22:56:55    hook ran: stdin={"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:56:55      parent: 92886     1 Thu Nov 19 22:55:06 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:56:55      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:56:55      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:56:55      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:56:55    turn complete: True
+22:56:55    last turn_context: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "on-request", "sandbox_policy": {"type": "read-only"}, "effort": "low", "permission_profile": {"type": "managed", "file_system": {"type": "restricted", "entries": [{"path": {"type": "special", "value": {"kind": "root
+22:56:55 ## A0 a new session with no flags, for the defaults of this CODEX_HOME: codex
+22:56:56    TUI ready: True
+22:57:14    hook ran: stdin={"session_id": "01a1f607-01d7-73d1-a3f2-c1dfdc64651a", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-56-56-01a1f607-01d7-73d1-a3f2-c1dfdc64651a.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:57:14      parent: 92886     1 Thu Nov 19 22:55:06 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:57:14      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:57:14      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:57:14      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:57:14    last turn_context: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6.2-sol", "approval_policy": "on-request", "sandbox_policy": {"type": "workspace-write", "network_access": false, "exclude_tmpdir_env_var": false, "exclude_slash_tmp": false}, "effort": "low", "permission_profile": {"type": "managed", "file_sys
+22:57:31 ## A6 a new session with the bypass flag and an added folder: codex -m gpt-6-luna --dangerously-bypass-approvals-and-sandbox --add-dir <scratch>/probe-cx/outside
+22:57:32    TUI ready: True
+22:57:53    hook ran: stdin={"session_id": "01a1f607-8d7a-7402-ab97-abb924d2536b", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-57-32-01a1f607-8d7a-7402-ab97-abb924d2536b.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:57:53      parent: 92886     1 Thu Nov 19 22:55:06 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:57:53      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:57:53      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:57:53      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:57:53    last turn_context: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "never", "sandbox_policy": {"type": "danger-full-access"}, "effort": "low", "permission_profile": {"type": "disabled"}, "turn_contexts": 1}
+22:57:55 ## A6b the scratch daemon stopped (2 processes), then a plain resume of A6's session
+22:57:55 ## A6b resume with no flags: codex resume 01a1f607-8d7a-7402-ab97-abb924d2536b
+22:57:56    TUI ready: True
+22:58:19    hook ran: stdin={"session_id": "01a1f607-8d7a-7402-ab97-abb924d2536b", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-57-32-01a1f607-8d7a-7402-ab97-abb924d2536b.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:58:19      parent: 99218 99215 Thu Nov 19 22:57:56 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:58:19      grandparent: 99215 99178 Thu Nov 19 22:57:55 2026     ~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex resume 01a1f607-8d7a-7402-ab97-abb924d2536b
+22:58:19      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:58:19      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:58:19    turn complete: True
+22:58:19    last turn_context: {"cwd": "<scratch>/probe-cx/repo", "model": "gpt-6-luna", "approval_policy": "never", "sandbox_policy": {"type": "danger-full-access"}, "effort": "low", "permission_profile": {"type": "disabled"}, "turn_contexts": 2}
+22:58:30    A6's rollout, read after A6b: session_meta (line 0) has runtime_workspace_roots [<repo>, <outside>]; thread_settings_applied at the start (line 10) and after the plain resume (line 18) both still list <outside>, the --add-dir folder. turn_context has no roots field.
+22:58:39 ## B resume with a first message: codex resume 01a1f603-fb74-7380-84b9-3b5740a079c8 You were reopened. Read your handoff inbox.
+22:58:40    a turn started with nothing typed: True
+22:58:40    the rollout's last user item: [{"type": "input_text", "text": "Reply with the single word fifth. Do not run any command."}]
+22:58:55    hook ran: stdin={"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:58:55      parent: 99218     1 Thu Nov 19 22:57:56 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server --listen unix:// --analytics-default-enabled --managed-daemon
+22:58:55      grandparent: 1     0 Fri Oct 30 20:03:21 2026     /sbin/launchd
+22:58:55      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:58:55      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:58:55    screen: >_ OpenAI Codex (v0.170.0) loading Resuming session… › Ask Codex to do anything ? for shortcuts <scratch>/probe-cx/repo › Reply with the single word again. Do not run any command. • ready Worked for 1s • 22:54 › Reply with the single word afresh. Do not run any command. • ready Worked for 2s • 22:55 › Reply with the single word third. Do not run any command. • third Worked for 1s • 22:55 › Reply with the single word fourth. Do not run any command. • fourth Worked for 1s • 22:56 › Reply with the single word fifth. Do not run any command. • fifth Worked for 1s • 22:56 › You were reopened. Read your handoff inbox. › Ask Codex to do anything GPT-6-Luna low · <scratch>/probe-cx/repo · Reply afresh ← agen s · ? for shortcuts • ready Worked for 1s • 22:54 › Reply with the single word afresh. Do not run any command. • ready Worked for 2s • 22:55 › Reply with the single word third. Do not run any command. • third Worked for 1s • 22:55 › Reply with the single word fourth. Do not run any command. • fourth Worked for 1s • 22:56 › Reply with the single word fifth. Do not run any command. • fifth Worked for 1s • 22:56 › You were reopened. Read your handoff inbox. • Starting MCP servers (1/2): codex_apps (0s • esc to interrupt) ◦ Working (0s • esc to interrupt) 1 • ◦ 2 • • I ’ll c
+22:58:55    the TUI is still running: True
+22:59:30    B, read afterwards: the rollout's last user item: [{"type": "input_text", "text": "You were reopened. Read your handoff inbox."}]; user_message events: 0, the last: None; task_complete events: 7
+22:59:30    B's hook stdin (paths left out): {"session_id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "hook_event_name": "SessionStart", "model": "gpt-6-luna", "permission_mode": "default", "source": "resume"}
+## C the head of A1's rollout (session 01a1f603-fb74), line by line
+22:59:14    line 0: session_meta None  {"id": "01a1f603-fb74-7380-84b9-3b5740a079c8", "cwd": "<scratch>/probe-cx/repo", "originator": "codex-tui", "source": "vscode", "thread_source": "user", "cli_version": "0.170.0"}
+22:59:14    line 1: event_msg task_started  
+22:59:14    line 2: response_item additional_tools developer 
+22:59:14    line 3: response_item message developer You are Codex, an agent based on GPT-6. You and the user share one workspace, and your job
+22:59:14    line 4: response_item message developer <skills_instructions> ## Skills A skill is a set of local instructions to follow that is s | <permissions instructions> Filesystem sandboxing defines which files can be read or writte | <collaboration_mode># Collaboration Mode: Default  You are now in Default mode. Any previo | <tools> Deferred tool
+22:59:14    line 5: response_item message developer <multi_agent_role>You are `/root`, the primary agent in a team of agents collaborating to 
+22:59:14    line 6: response_item message developer <multi_agent_mode>Any earlier instruction enabling proactive multi-agent delegation no lon
+22:59:14    line 7: response_item message user <environment_context>   <cwd><scratch>
+22:59:14    line 8: world_state None  
+22:59:14    line 9: turn_context None  
+22:59:14    line 10: event_msg thread_settings_applied  
+22:59:14    line 11: response_item message user Reply with the single word ready. Do not run any command.
+22:59:14    line 12: event_msg item_completed  
+22:59:14    line 13: event_msg item_completed  
+22:59:14    line 14: response_item message assistant ready
+22:59:14    line 15: token_usage_record None  
+22:59:14    line 16: event_msg token_count  
+22:59:14    line 17: event_msg task_complete  
+22:59:14    line 18: event_msg thread_settings_applied  
+22:59:14    line 19: event_msg task_started  
+22:59:14    line 20: turn_context None  
+22:59:14    line 21: response_item message user Reply with the single word again. Do not run any command.
+22:59:14    line 22: event_msg item_completed  
+22:59:14    line 23: event_msg item_completed  
+22:59:14    line 24: response_item message assistant ready
+22:59:14    line 25: token_usage_record None  
+22:59:14    line 26: event_msg token_count  
+22:59:14    line 27: event_msg task_complete  
+22:59:14    line 28: event_msg thread_settings_applied  
+22:59:14    line 29: event_msg task_started  
+22:59:14    line 30: turn_context None  
+22:59:14    line 31: response_item message user Reply with the single word afresh. Do not run any command.
+22:59:14    line 32: event_msg item_completed  
+22:59:14    line 33: event_msg item_completed  
+22:59:14    line 34: response_item message assistant ready
+22:59:14    line 35: token_usage_record None  
+22:59:14    line 36: event_msg token_count  
+22:59:14    line 37: event_msg task_complete  
+22:59:14    line 38: event_msg thread_settings_applied  
+22:59:14    line 39: event_msg thread_settings_applied  
+22:59:24 ## D codex exec, stdin from /dev/null
+22:59:27    exit 0, stdout: 'ok'
+22:59:27    hook ran: stdin={"session_id": "01a1f609-429a-76b3-86a4-be3a73d384b1", "transcript_path": "<scratch>/probe-cx/codex-home/sessions/2026/11/19/rollout-2026-11-19T22-59-24-01a1f609-429a-76b3-86a4-be3a73d384b1.jsonl", "cwd": "<scratch>wd=<scratch>/probe-cx/repo
+22:59:27      parent: 3539  3538 Thu Nov 19 22:59:24 2026     ~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex exec -m gpt-6-luna Reply with the single word ok. Do not run any command.
+22:59:27      grandparent: 3538  3534 Thu Nov 19 22:59:24 2026     /Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python codex-probe.py d
+22:59:27      write outside the repo: {"<scratch>/probe-cx/outside": "ok", "<repository>/evidence/r1/.probe-outside": "ok"}
+22:59:27      env: {"CODEX_HOME": "<scratch>/probe-cx/codex-home", "CODEX_MANAGED_BY_NPM": "1", "CODEX_MANAGED_PACKAGE_ROOT": "~/.nvm/versions/node/v24.11.1/lib/node_modules/@openai/codex"}
+22:59:43    D's hook stdin (paths left out): {"session_id": "01a1f609-429a-76b3-86a4-be3a73d384b1", "hook_event_name": "SessionStart", "model": "gpt-6-luna", "permission_mode": "bypassPermissions", "source": "startup"}
+22:59:43    ## the scratch daemon now: 1905 99218 Thu 19 Nov 22:58:44 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex-code-mode-hos
+22:59:43       it holds open: []
+22:59:43    ## the scratch daemon now: 4420 56580 Thu 19 Nov 22:59:43 2026     /bin/zsh -c source ~/.claude/shell-snapshots/snapshot-zsh-1795127623228-ovoj2b.sh 2>/dev/null || true && \builtin setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL NO_BRACE_CCL NO_MAGIC_EQUAL_SUBST NO_EQUALS 2>/dev/null || true 
+22:59:43       it holds open: []
+22:59:43    ## the scratch daemon now: 99218     1 Thu 19 Nov 22:57:56 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server -
+22:59:44       it holds open: ['rollout-2026-11-19T22-53-38-01a1f603-fb74-7380-84b9-3b5740a079c8.jsonl', '01a1f603-fb74-7380-84b9-3b5740a079c8.lock']
+22:59:44    ## the scratch daemon now: 99229     1 Thu 19 Nov 22:57:56 2026     <scratch>/probe-cx/codex-home/packages/app-server-daemon/releases/0.170.0-aarch64-apple-darwin/bin/codex app-server d
+22:59:44       it holds open: []
+22:59:44    no Codex TUI of the probe runs now: True
+23:07:45    the scratch daemon (app-server --listen), about 9 minutes after B's TUI closed at 22:58:57, holds open: []
+23:07:45    the scratch daemon (app-server --listen), about 9 minutes after B's TUI closed at 22:58:57, holds open: []

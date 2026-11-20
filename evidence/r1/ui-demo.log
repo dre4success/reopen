@@ -1,0 +1,156 @@
+# command: python3 ui-demo-setup.py <demo>, then python3 ui-demo-drive.py <demo> <demo>/work/reopen j ' ' k '': the built reopen in a pseudo-terminal of 110 by 30, with HOME=<demo>/home, a stand-in claude (for claude agents --json) and a stand-in osascript (REOPEN_TEST_OSASCRIPT) that only notes its arguments; no window opened
+# date: 2026-11-19 23:22:16 UTC
+# by: Opus 5.5 (implementer), Claude Code, on the operator's Mac
+# The sample sessions (ui-demo-setup.py): claude in bypass mode with a role, codex and agy with roles, claude in the background (claude agents --json lists it) whose role handoff dropped, and claude whose role another session holds now, with an escape sequence in its first message. Screens are shown with escape sequences removed.
+=== screen after start ===
+reopen · reopen · 5 sessions to bring back
+
+› ○ claude  (reviewer-2)   40 min ago  long migration of the store
+
+    reopen/cmd · in the background · claude attach e5f6a7b8 · 88 B · e5f6a7b8
+
+    handoff no longer lists its role reviewer-2; give it again if it should have it
+
+  ● claude  implementer    3 h ago     build reopen from docs/DESIGN.md
+
+    reopen · bypassPermissions mode --dangerously-skip-permissions · 4.2 MB · a1b…  ⚠ skips permission checks
+
+  ● codex   reviewer       yesterday   you're the reviewer: review R1 hard, especially open-or-not
+
+    reopen · gpt-6.2-sol, on-request, workspace-write · 11 MB · 019a6a3f
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ● agy     reviewer-3     3 days ago  you're reviewer-3: try to break the picker
+
+    reopen · --model gemini-4-neon-high · 140 B · c9d8e7f6
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ○ claude  (implementer)  6 days ago  old idea, red text from a transcript
+
+    reopen · 116 B · f0e1d2c3
+
+    not ticked: its role implementer is now session a1b2c3d4's
+
+↑↓ move · space tick · a all · n none · enter opens 3 in a new iTerm2 window · q quit
+
+=== screen after 'j' ===
+
+reopen · reopen · 5 sessions to bring back
+
+  ○ claude  (reviewer-2)   40 min ago  long migration of the store
+
+    reopen/cmd · in the background · claude attach e5f6a7b8 · 88 B · e5f6a7b8
+
+    handoff no longer lists its role reviewer-2; give it again if it should have it
+
+› ● claude  implementer    3 h ago     build reopen from docs/DESIGN.md
+
+    reopen · bypassPermissions mode --dangerously-skip-permissions · 4.2 MB · a1b…  ⚠ skips permission checks
+
+  ● codex   reviewer       yesterday   you're the reviewer: review R1 hard, especially open-or-not
+
+    reopen · gpt-6.2-sol, on-request, workspace-write · 11 MB · 019a6a3f
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ● agy     reviewer-3     3 days ago  you're reviewer-3: try to break the picker
+
+    reopen · --model gemini-4-neon-high · 140 B · c9d8e7f6
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ○ claude  (implementer)  6 days ago  old idea, red text from a transcript
+
+    reopen · 116 B · f0e1d2c3
+
+    not ticked: its role implementer is now session a1b2c3d4's
+
+↑↓ move · space tick · a all · n none · enter opens 3 in a new iTerm2 window · q quit
+
+=== screen after ' ' ===
+
+reopen · reopen · 5 sessions to bring back
+
+  ○ claude  (reviewer-2)   40 min ago  long migration of the store
+
+    reopen/cmd · in the background · claude attach e5f6a7b8 · 88 B · e5f6a7b8
+
+    handoff no longer lists its role reviewer-2; give it again if it should have it
+
+› ○ claude  implementer    3 h ago     build reopen from docs/DESIGN.md
+
+    reopen · bypassPermissions mode --dangerously-skip-permissions · 4.2 MB · a1b…  ⚠ skips permission checks
+
+  ● codex   reviewer       yesterday   you're the reviewer: review R1 hard, especially open-or-not
+
+    reopen · gpt-6.2-sol, on-request, workspace-write · 11 MB · 019a6a3f
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ● agy     reviewer-3     3 days ago  you're reviewer-3: try to break the picker
+
+    reopen · --model gemini-4-neon-high · 140 B · c9d8e7f6
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ○ claude  (implementer)  6 days ago  old idea, red text from a transcript
+
+    reopen · 116 B · f0e1d2c3
+
+    not ticked: its role implementer is now session a1b2c3d4's
+
+↑↓ move · space tick · a all · n none · enter opens 2 in a new iTerm2 window · q quit
+
+=== screen after 'k' ===
+
+reopen · reopen · 5 sessions to bring back
+
+› ○ claude  (reviewer-2)   40 min ago  long migration of the store
+
+    reopen/cmd · in the background · claude attach e5f6a7b8 · 88 B · e5f6a7b8
+
+    handoff no longer lists its role reviewer-2; give it again if it should have it
+
+  ○ claude  implementer    3 h ago     build reopen from docs/DESIGN.md
+
+    reopen · bypassPermissions mode --dangerously-skip-permissions · 4.2 MB · a1b…  ⚠ skips permission checks
+
+  ● codex   reviewer       yesterday   you're the reviewer: review R1 hard, especially open-or-not
+
+    reopen · gpt-6.2-sol, on-request, workspace-write · 11 MB · 019a6a3f
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ● agy     reviewer-3     3 days ago  you're reviewer-3: try to break the picker
+
+    reopen · --model gemini-4-neon-high · 140 B · c9d8e7f6
+
+    first message: "You were reopened. Read your handoff inbox."
+
+  ○ claude  (implementer)  6 days ago  old idea, red text from a transcript
+
+    reopen · 116 B · f0e1d2c3
+
+    not ticked: its role implementer is now session a1b2c3d4's
+
+↑↓ move · space tick · a all · n none · enter opens 2 in a new iTerm2 window · q quit
+
+=== screen after '\\r' ===
+
+reopen · opened 2 of 5 in a new iTerm2 window
+  ● codex   reviewer       you're the reviewer: review R1 hard, especially open-or-not · told "You were reop…
+  ● agy     reviewer-3     you're reviewer-3: try to break the picker · told "You were reopened. Read your h…
+  not opened:
+  ○ claude  (reviewer-2)   long migration of the store · in the background: claude attach e5f6a7b8
+  ○ claude  implementer    build reopen from docs/DESIGN.md
+  ○ claude  (implementer)  old idea, red text from a transcript · its role is session a1b2c3d4's now
+
+=== screen after end ===
+
+
+## the stand-in osascript's arguments: '-' (the script on stdin), then one command per tab
+-
+cd -- <demo>/work/reopen && codex resume 019a6a3f-2222-7222-8222-222222222222 'You were reopened. Read your handoff inbox.'
+cd -- <demo>/work/reopen && agy --conversation c9d8e7f6-3333-4333-8333-333333333333 --model gemini-4-neon-high --prompt-interactive 'You were reopened. Read your handoff inbox.'
